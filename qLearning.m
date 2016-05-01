@@ -8,7 +8,7 @@ epsilon = 0.1;
 alpha = 0.3;
 gamma = 0.9;
 stateIndex = getStateIndex(state);
-
+ 
 % epsilon-greedy action selection
 [Max, action_t] = max(Q(stateIndex,:));
 % % % % % % % % % % if Max == 0
