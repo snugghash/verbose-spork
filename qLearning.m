@@ -1,14 +1,13 @@
-function [ action ] = Qlearning( EnvState, pos, reward )
-%Qlearning Learning the Q outta an env, one step at a time.
+function [ action ] = qLearning( EnvState, pos, reward )
+%Qlearning Learning to select options and navigate, one step at a time.
 
 %   Actions: 0-No action, 1-Right, 2-Left, 3-Up and 4-Down
-
 j=0;
 epsilon = 0.1;
 alpha = 0.3;
 gamma = 0.9;
 stateIndex = getStateIndex(state);
- 
+
 % epsilon-greedy action selection
 [Max, action_t] = max(Q(stateIndex,:));
 % % % % % % % % % % if Max == 0
@@ -58,23 +57,6 @@ if ( (newState_trans(1) > 12 || newState_trans(1) < 1) ...
 end
 
 newState = newState_trans;
-
-% Blowing the wind
-% if flag_wind == 1
-    if normcdf(randn()) <= 0.5 && flag_wind == 1
-        % Wind blow towards East(Right) Action_Right = 1
-        newState = newState_trans + takeAction(1);
-        display('Wind is blowing.......................');
-    end
-% end
-
-% Reverting the wind violations
-if ( (newState(1) > 12 || newState(1) < 1) ...
-        || (newState(2) > 12 || newState(2) < 1) )
-    newState = newState_trans;
-    display('Wind blocked')
-% % % %     action = 0;
-end
 
 R = reward(newState(1), newState(2), variant);
 

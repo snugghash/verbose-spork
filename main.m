@@ -12,5 +12,6 @@ vec = [0 1];
 vec = vec / norm(vec);
 
 obsEnv = observableEnv(EnvState, pos, vec);
-action = Qlearning(obsEnv, pos);
+action = qLearning(obsEnv, pos);
+
 
