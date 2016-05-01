@@ -8,7 +8,7 @@ EnvState = EnvironmentModel(EnvState);
 
 % Start the bot
 pos = [1 1];
-vec = [randn(1) randn(1)];
+vec = [0 1];
 vec = vec / norm(vec);
 
 obsEnv = observableEnv(EnvState, pos, vec);

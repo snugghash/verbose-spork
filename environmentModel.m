@@ -10,7 +10,7 @@ ballR = 5;
 fov = 5*ballR;
 angle = 135;
 eyes = 9;
-coords;
+% coords;
 
 if prevEnvState == 0
     % 30 rand coordinates
