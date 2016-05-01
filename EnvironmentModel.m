@@ -10,6 +10,7 @@ ballR = 5;
 fov = 5*ballR;
 angle = 135;
 eyes = 9;
+global numThings = 2; % No walls
 % coords;
 
 if prevEnvState == 0
