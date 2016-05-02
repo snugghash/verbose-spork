@@ -1,4 +1,4 @@
-function [ action ] = qLearning( obsState, position, lastReward )
+function [ action ] = qLearning( obsState, lastReward )
 %Qlearning Learning to select options and navigate, one step at a time.
 % Arguments: Observed state, position, reward from last action.
 % Overview: Options: --Explore --Go to fruit --Choose between fruit to go
@@ -8,8 +8,8 @@ function [ action ] = qLearning( obsState, position, lastReward )
 
 %% Pre computation
 
-% Actions: 1-Move forward, 2-Turn Right 45\deg, 3-Turn Left 45\deg, and
-% 4-Turn back 180\deg (NOT IMPLEMENTED)
+% Actions: 1-Move forward, 2-Turn Right by turnRate\deg, 3-Turn Left 
+% by turnRate\deg, and 4-Turn back 180\deg (NOT IMPLEMENTED)
 global turnRate WALL previousState previousAction theta;
 turnRate = 45;
 j=0;
@@ -37,15 +37,21 @@ if(closestGoodDirection == 0)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
-    if(obsState(5,WALL)<Inf)
+    global turningActions;
+    if(turningActions~=0) 
+        action = 2; 
+        turningActions = turningActions -1;
+    elseif(obsState(5,WALL)<Inf)
+        % Randomly choose an anglue to turn between turnRate and 180
+        turningActions = randi(3); 
+        action = 2;
+    else 
         action = 1;
     end
 else
     % Collect good thing
-    actionSelected = getGreedyAction(obsState);
+    action = getGreedyAction(obsState, theta);
 end
-
-action = actionSelected;
 
 %% Updating from observed reward
 % If previousState exists, update it.
