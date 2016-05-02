@@ -4,13 +4,14 @@ function [ currentEnvState ] = EnvironmentModel( prevEnvState )
 
 % Generate Grid
 grid = [1:1000,1:1000];
+global fov angleOfVision eyes numThings;
 negR = -2;
 plusR = 1;
 ballR = 5;
 fov = 5*ballR;
-angle = 135;
+angleOfVision = 135;
 eyes = 9;
-global numThings = 2; % No walls
+numThings = 2; % No walls
 % coords;
 
 if prevEnvState == 0

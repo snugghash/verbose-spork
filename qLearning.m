@@ -6,20 +6,34 @@ function [ action ] = qLearning( obsState, position, lastReward )
 % TODO: Everything
 % Exploitation of multiple good things
 
-% Actions: 0-Move forward, 1-Turn Right 45\deg, 2-Turn Left 45\deg, and
-% 4-Turn back 180\deg
+% Actions: 1-Move forward, 2-Turn Right 45\deg, 3-Turn Left 45\deg, and
+% 4-Turn back 180\deg (NOT IMPLEMENTED)
+global turnRate WALL previousState previousAction theta;
+turnRate = 45;
 j=0;
 epsilon = 0.1;
-alpha = 0.3;
-gamma = 0.9;
+learningRate = 0.3;
+discountFactor = 0.9;
 
-% Check if Q values are in workspace. Initialize otherwise.
-if(exist('Q')==0)
-    global Q;
+% Check if theta values are in workspace. Initialize otherwise.
+if(isempty(theta))
     % Each of the possible states have action values
-    Q = zeros((eyes*fov)^numThings,5); 
+    theta = zeros(eyes,numThings);
 end
 
+%% Updating from observed reward
+% If previousState exists, update it.
+if(isempty(previousState)==0)
+    % Nomenclature [state(s) actionSelected(a) newState(s') newActionSelected(a') R]
+    % Please note action at time t is 'actionSelected'
+    if newState ~= state
+        delta = R + actionValueApprox(, newActionSelected) - Q(getStateIndex(state), actionSelected);
+        for i=1:eyes
+            theta(i) = theta(i) + learningRate * delta * gradTheta
+        end
+    end
+end
+%% Selecting next action
 % Get distance to closest good thing
 closestGoodDistance = Inf;
 closestGoodDirection = 0;
@@ -30,96 +44,20 @@ for i=1:eyes
     end
 end
 if(closestGoodDirection == 0)
-    % Explore
-    % epsilon-greedy action selection
-    [Max, action_t] = max(Q(stateIndex,:));
-    % % % % % % % % if Max == 0
-    % % % % % % % %     action_t = randi(4);
-    % % % % % % % % end
-    for i = 1:4
-        if action_t ~= i
-            j=j+1;
-            remActions(j) = i;
-        end
-    end
-
-    if normcdf(randn()) >= 1 - epsilon
-        actionSelected = action_t;
-    else 
-        actionSelected = remActions( randi(3) );
+    % Explore (TODO Go to last known good thing)
+    % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
+    % going.
+    if(obsState(5,WALL)<Inf)
+        action = 1;
     end
 else
     % Collect good thing
+    actionSelected = getGreedyAction(obsState);
 end
 
-% % Stochastic Action Selection (A_t)
-% afterState = [stateIndex actionSelected];
-% action = actionSelected;
-% % % display(actionSelected);
-% 
-% % State Transition 
-% j=0;
-% for i = 1:4
-%     if action ~= i
-%         j=j+1;
-%         remActions(j) = i;
-%     end
-% end
-% 
-% if normcdf(randn()) >= 0.9
-%     newState_trans = state + takeAction(action);
-% else 
-%     action = remActions( randi(3) );
-%     newState_trans = state + takeAction(action);
-% end
-% % % display(action);
-% 
-% % Reverting the action violations
-% if ( (newState_trans(1) > 12 || newState_trans(1) < 1) ...
-%         || (newState_trans(2) > 12 || newState_trans(2) < 1) )
-%     newState_trans = state;
-%     display('Action blocked')
-% % % % %     action = 0;
-% end
-% 
-% newState = newState_trans;
-% 
-% R = reward(newState(1), newState(2), variant);
-% 
-% % Action in newState - A_t+1 at new state S_t+1
-% newStateIndex = getStateIndex(newState);
-% % epsilon-greedy action selection
-% [Max, action_t_1] = max(Q(newStateIndex,:));
-% j=0;
-% for i = 1:4
-%     if action_t_1 ~= i
-%     j=j+1;
-%         remActions(j) = i;
-%     end
-% end
-% if normcdf(randn()) >= 1 - epsilon
-%     newActionSelected = action_t_1;
-% else 
-%     newActionSelected = remActions( randi(3) );
-% end
-% newAfterState = [newStateIndex newActionSelected];
-% 
-% 
-% % Nomenclature [state(s) actionSelected(a) newState(s') newActionSelected(a') R]
-% % Please note action at time t is 'actionSelected'
-% if newState ~= state
-%     
-%     delta = R + gamma * Q(getStateIndex(newState), newActionSelected)...
-%         - Q(getStateIndex(state), actionSelected);
-%     
-%     % Replacing Traces
-%     E(getStateIndex(state), actionSelected) = 1;
-%     
-%     for s = 1:144
-%         for a = 1:4
-%             Q(s,a) = Q(s,a) + alpha * delta * E(s,a);
-%             E(s,a) = gamma * lambda * E(s,a);
-%         end
-%     end
+% Stochastic Action Selection (A_t)
+action = actionSelected;
+previousState = obsState;
+previousAction = action;
 
 end
