@@ -4,7 +4,10 @@ function [ obsEnv ] = observableEnv( fullEnv, pos, dirVec )
 %   (pos) and the direction its looking in(dirVec).
 
 ballR = 5;
-global fov angle eyes;
+global fov angle eyes WALL GOOD BAD;
+WALL = 1;
+GOOD = 2;
+BAD = 3;
 fov = 5*ballR;
 angle = 135;
 eyes = 9;

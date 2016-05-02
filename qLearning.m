@@ -6,6 +6,8 @@ function [ action ] = qLearning( obsState, position, lastReward )
 % TODO: Everything
 % Exploitation of multiple good things
 
+%% Pre computation
+
 % Actions: 1-Move forward, 2-Turn Right 45\deg, 3-Turn Left 45\deg, and
 % 4-Turn back 180\deg (NOT IMPLEMENTED)
 global turnRate WALL previousState previousAction theta;
@@ -21,18 +23,6 @@ if(isempty(theta))
     theta = zeros(eyes,numThings);
 end
 
-%% Updating from observed reward
-% If previousState exists, update it.
-if(isempty(previousState)==0)
-    % Nomenclature [state(s) actionSelected(a) newState(s') newActionSelected(a') R]
-    % Please note action at time t is 'actionSelected'
-    if newState ~= state
-        delta = R + actionValueApprox(, newActionSelected) - Q(getStateIndex(state), actionSelected);
-        for i=1:eyes
-            theta(i) = theta(i) + learningRate * delta * gradTheta
-        end
-    end
-end
 %% Selecting next action
 % Get distance to closest good thing
 closestGoodDistance = Inf;
@@ -55,8 +45,21 @@ else
     actionSelected = getGreedyAction(obsState);
 end
 
-% Stochastic Action Selection (A_t)
 action = actionSelected;
+
+%% Updating from observed reward
+% If previousState exists, update it.
+if(isempty(previousState)==0)
+    if newState ~= state
+        delta = lastReward + actionValueApprox(obsState,action) - actionValueApprox(previousState,previousAction);
+        i = actionToEye(previousAction);
+        [tmp j] = min(previousState(i,:));
+        theta(i,j) = theta(i,j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[i j]);
+    end
+end
+
+
+%% Post computation
 previousState = obsState;
 previousAction = action;
 
