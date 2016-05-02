@@ -1,4 +1,4 @@
-function [ currentEnvState ] = EnvironmentModel( prevEnvState )
+function [ currentEnvState ] = environmentModel( prevEnvState )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
