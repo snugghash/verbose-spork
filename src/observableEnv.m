@@ -4,7 +4,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   (pos) and the direction its looking in(dirVec).
 
 ballR = 5;
-global fov angle eyes WALL GOOD BAD;
+global visibility angle eyes WALL GOOD BAD;
 WALL = 1;
 GOOD = 2;
 BAD = 3;
@@ -47,9 +47,6 @@ end
 
 % Five actions that can be taken - middle 5
 actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
-
-
-
 
 end
 

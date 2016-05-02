@@ -114,21 +114,21 @@ Agar.io is a blob-eat-blob 2D world where the player controls a circular
 \begin_inset Newline newline
 \end_inset
 
-The current report focuses on an exercise to solve a 
-\begin_inset CommandInset href
-LatexCommand href
-name "simpler version of the problem"
-target "http://cs.stanford.edu/people/karpathy/convnetjs/demo/rldemo.html"
+The current report focuses on an exercise to solve a simpler version of
+ the problem
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
 
 \end_inset
 
-, a more static, single player world with limited observability and continuous
- state space.
+, a single player world with limited observability and continuous state
+ space.
 \begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-The code for the project can be found at 
+Project repository, including latest report and source code at 
 \begin_inset CommandInset href
 LatexCommand href
 target "https://github.com/snugghash/verbose-spork"
@@ -183,7 +183,36 @@ Results
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
 
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Average reward over 100000 steps
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "key-1"
+
+\end_inset
+
+http://cs.stanford.edu/people/karpathy/convnetjs/demo/rldemo.html
 \end_layout
 
 \end_body

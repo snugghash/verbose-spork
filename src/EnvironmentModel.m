@@ -1,18 +1,15 @@
-function [ currentEnvState ] = environmentModel( prevEnvState )
+function [ currentEnvState ] = EnvironmentModel( prevEnvState )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
 % Generate Grid
 grid = [1:1000,1:1000];
-global fov angleOfVision eyes numThings;
+global numThings;
 negR = -2;
 plusR = 1;
 ballR = 5;
-fov = 5*ballR;
-angleOfVision = 135;
-eyes = 9;
 numThings = 2; % No walls
-% coords;
+coords = [];
 
 if prevEnvState == 0
     % 30 rand coordinates
