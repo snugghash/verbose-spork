@@ -8,8 +8,8 @@ function [ action ] = qLearning( obsState, lastReward )
 
 %% Pre computation
 
-% Actions: 1-Move forward, 2-Turn Right by turnRate\deg, 3-Turn Left 
-% by turnRate\deg, and 4-Turn back 180\deg (NOT IMPLEMENTED)
+% Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
+% 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
 global turnRate WALL previousState previousAction theta;
 turnRate = 45;
 j=0;

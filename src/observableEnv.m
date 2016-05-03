@@ -3,12 +3,11 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
 
-ballR = 5;
-global visibility angle eyes WALL GOOD BAD;
+global visibility angle eyes WALL GOOD BAD ballRadius;
 WALL = 1;
 GOOD = 2;
 BAD = 3;
-visibility = 5*ballR; % Arbitally chosen
+visibility = 10*ballRadius; % Arbitally chosen
 angle = 135;
 eyes = 9;
 actions = 5;
@@ -19,14 +18,16 @@ for i = 1:eyes
     obsDirs(i) = dirVecAngle - ((eyes+1)/2-i)*(angle/eyes);
 end
 
+obsEnv = fullEnv;
 % Observing and assigning any blob and distance to it data
 j=0;
-for i=1:size(obsEnv,2)
+for i=1:size(obsEnv,2) % Number of consumables
     for line = 1:eyes
+        % Intersection with circle of consumables
         [xout,yout] = linecirc(obsDirs(line),0,obsEnv(i,1)-pos(1),...
-            obsEnv(i,2)-pos(2),ballR);
-        
+            obsEnv(i,2)-pos(2),ballRadius); 
         if ~isnan(xout)
+            % Intersection detected
             temp = sqrt(xout*xout, yout*yout);
             if temp(1)<=visibility
                 distance(line) = temp(1);
@@ -36,17 +37,14 @@ for i=1:size(obsEnv,2)
                 obsEnv(j) = obsEnv(i);
             end
         else
+            % No intersection
             distance(line) = -1;
         end
-            
-          j=j+1; 
+        j=j+1; 
     end
-    
 end
-    
 
 % Five actions that can be taken - middle 5
 actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
 end
-
