@@ -3,7 +3,8 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
 
-global visibility angle eyes WALL GOOD BAD ballRadius;
+global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
+turnRate = 90;
 WALL = 1;
 GOOD = 2;
 BAD = 3;
@@ -18,27 +19,25 @@ for i = 1:eyes
     obsDirs(i) = dirVecAngle - ((eyes+1)/2-i)*(angle/eyes);
 end
 
-obsEnv = fullEnv;
 % Observing and assigning any blob and distance to it data
 j=0;
-for i=1:size(obsEnv,2) % Number of consumables
+for i=1:size(fullEnv(2:amountOfConsumables,:),1) % Number of consumables
     for line = 1:eyes
-        % Intersection with circle of consumables
-        [xout,yout] = linecirc(obsDirs(line),0,obsEnv(i,1)-pos(1),...
-            obsEnv(i,2)-pos(2),ballRadius); 
+        % Check for intersection with circle of consumables
+        [xout,yout] = linecirc(obsDirs(line),0,fullEnv(1+i,1)-pos(1),...
+            fullEnv(1+i,2)-pos(2),ballRadius); 
         if ~isnan(xout)
             % Intersection detected
-            temp = sqrt(xout*xout, yout*yout);
+            temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
+            temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if temp(1)<=visibility
-                distance(line) = temp(1);
-                obsEnv(j) = obsEnv(i);
-            else
-                distance(line) = temp(2);
-                obsEnv(j) = obsEnv(i);
+                obsEnv(line, fullEnv(1+i,3)) = temp(1);
+            elseif temp(2) <= visibility
+                obsEnv(line, fullEnv(1+i,3)) = temp(2);
             end
         else
             % No intersection
-            distance(line) = -1;
+            obsEnv(line, fullEnv(1+i,3)) = Inf;
         end
         j=j+1; 
     end

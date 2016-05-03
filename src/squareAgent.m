@@ -1,17 +1,20 @@
-function [ action ] = qLearning( obsState, lastReward )
+function [ action ] = squareAgent( obsState, lastReward )
 %Qlearning Learning to select options and navigate, one step at a time.
 % Arguments: Observed state, position, reward from last action.
 % Overview: Options: --Explore --Go to fruit --Choose between fruit to go
 % to.
-% TODO: Everything
+% 
+% State is a matrix with 1st dimension being the sensors, and second is
+% the object type.
+%
+% TODO
 % Exploitation of multiple good things
+% Good exploration/exploitation
 
-%% Pre computation
-
+%%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta;
-turnRate = 45;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings;
 j=0;
 epsilon = 0.1;
 learningRate = 0.3;
@@ -28,8 +31,8 @@ end
 closestGoodDistance = Inf;
 closestGoodDirection = 0;
 for i=1:eyes
-    if(obsState(i) < closestGoodDistance)
-        closestGoodDistance = obsState(i);
+    if(obsState(i,GOOD) < closestGoodDistance)
+        closestGoodDistance = obsState(i,GOOD);
         closestGoodDirection = i;
     end
 end
@@ -56,7 +59,7 @@ end
 %% Updating from observed reward
 % If previousState exists, update it.
 if(isempty(previousState)==0)
-    if newState ~= state
+    if obsState ~= previousState
         delta = lastReward + actionValueApprox(obsState,action) - actionValueApprox(previousState,previousAction);
         i = actionToEye(previousAction);
         [tmp j] = min(previousState(i,:));
@@ -64,8 +67,7 @@ if(isempty(previousState)==0)
     end
 end
 
-
-%% Post computation
+%%
 previousState = obsState;
 previousAction = action;
 

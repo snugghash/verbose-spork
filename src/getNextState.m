@@ -8,7 +8,7 @@ if action == 1 % Forward
         return;
     end
 elseif action==2 % Counter clockwise
-    envState(1,3) = -prevState(1,4);
+    envState(1,3) = -prevState(1,4); %TODO 90\deg
     envState(1,4) = prevState(1,3);
 elseif action==3 % Clockwise
     envState(1,3) = prevState(1,4);
