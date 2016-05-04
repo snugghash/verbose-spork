@@ -9,13 +9,14 @@ vec = vec / norm(vec);
 obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
         
-max_steps = 100000;
+max_steps = 10000;
 frame = 100;
 steps = 0;
 figure(1);
-lHandle = line(nan, nan);
-X = get(lHandle, 'XData');
-Y = get(lHandle, 'YData');
+avgRewardPlot = plot(nan);
+hold on;
+X = get(avgRewardPlot, 'XData');
+Y = get(avgRewardPlot, 'YData');
 while steps<=max_steps
     avgReward = 0;
     for i=1:100
@@ -26,6 +27,6 @@ while steps<=max_steps
         steps = steps+1;
     end
     avgReward = avgReward/100;
-    set(lHandle, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
+    set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
     drawnow
 end

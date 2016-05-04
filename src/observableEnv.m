@@ -5,9 +5,6 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 
 global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
 turnRate = 90;
-WALL = 1;
-GOOD = 2;
-BAD = 3;
 visibility = 10*ballRadius; % Arbitally chosen
 angle = 135;
 eyes = 9;
