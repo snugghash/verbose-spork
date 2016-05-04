@@ -19,7 +19,7 @@ amountOfConsumables = 30;
 reward = 0;
 if prevEnvState == 0
     % 30 rand coordinates, half of them good.
-    coords = randi(100, amountOfConsumables,2);
+    coords = randi(gridSize, amountOfConsumables,2);
     coords(amountOfConsumables/2+1:end,3) = BAD;
     coords(1:amountOfConsumables/2,3) = GOOD;
     coords(amountOfConsumables/2+1:end,4) = negR;
@@ -28,7 +28,7 @@ if prevEnvState == 0
     hold on;
     agentPosition = [1 1];
     agentDirection = [1 0];
-    plot(agentPosition(1,[1 2]),'b*');
+    plot(agentPosition(1),agentPosition(2),'b*');
     
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
