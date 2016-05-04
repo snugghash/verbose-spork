@@ -1,4 +1,4 @@
-dbg = input('Do you want to debug = ','s');
+dbg = str2num(input('Do you want to debug = ','s'));
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
