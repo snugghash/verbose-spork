@@ -2,10 +2,9 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
+global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize;
 % Generate Grid
 gridSize = 100;
-%grid = [1:gridSize,1:gridSize];
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot;
 WALL = 1;
 GOOD = 2;
 BAD = 3;
@@ -19,7 +18,7 @@ amountOfConsumables = 30;
 reward = 0;
 if prevEnvState == 0
     % 30 rand coordinates, half of them good.
-    coords = randi(100, amountOfConsumables,2);
+    coords = randi(gridSize, amountOfConsumables,2);
     coords(amountOfConsumables/2+1:end,3) = BAD;
     coords(1:amountOfConsumables/2,3) = GOOD;
     coords(amountOfConsumables/2+1:end,4) = negR;
@@ -28,12 +27,12 @@ if prevEnvState == 0
     hold on;
     agentPosition = [1 1];
     agentDirection = [1 0];
-    plot(agentPosition(1,[1 2]),'b*');
+    plot(agentPosition(1),agentPosition(2),'b*');
+    title('Agent and environment');
     
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
         coords;];
-    reward = 0;
     return;
 end
 
@@ -45,11 +44,13 @@ for i = 1:amountOfConsumables
     if EnvState(1+i,[1 2]) == EnvState(1,[1 2])
         reward = EnvState(1+i,4);
         % Generate a consumable
-        newblob = randi(1000, 1,2);
+        newblob = randi(100, 1,2);
         EnvState(1+i,[1 2]) = newblob;
     end
 end
 currentEnvState = EnvState;
-set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2));
-drawnow
+% Update the plot of agent and environment to reflect current position
+%set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2));
+%drawnow
+plot(currentEnvState(1,1),currentEnvState(1,2),'b*');
 end
