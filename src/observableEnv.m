@@ -13,7 +13,7 @@ actions = 5;
 % Field of View
 dirVecAngle = atand(dirVec(2)/dirVec(1));
 for i = 1:eyes
-    obsDirs(i) = dirVecAngle - ((eyes+1)/2-i)*(angle/eyes);
+    obsDirs(i) = dirVecAngle - ((eyes+1)/2 - i)*(angle/eyes);
 end
 
 % Observing and assigning any blob and distance to it data

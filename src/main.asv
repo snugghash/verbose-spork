@@ -1,4 +1,4 @@
-dbg = input('Do you want to debug = ','s');
+dbg = input('Do you want to debug',s);
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
@@ -18,14 +18,9 @@ avgRewardPlot = plot(nan);
 hold on;
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
-
-if dbg == 1 
-    display('In main: becclearfore while');
-end
-
 while steps<=max_steps
     if dbg == 1 
-        display(steps);
+        display(steps); 
     end
     avgReward = 0;
     for i=1:100
