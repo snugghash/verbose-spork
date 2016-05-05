@@ -1,7 +1,7 @@
 function [ i] = actionToEye( action )
 %UNTITLED4 Summary of this function goes here
 %   Detailed explanation goes here
-global eyes angleOfVision;
+global eyes angleOfVision turnRate;
 if(action == 1)
     i = round(eyes/2);
 elseif(action == 3)

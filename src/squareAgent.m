@@ -50,7 +50,7 @@ if(closestGoodDirection == 0)
         end
         action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(5,WALL)<Inf)
+    elseif(obsState(5,WALL)<5) %TODO Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end
@@ -84,3 +84,4 @@ previousState = obsState;
 previousAction = action;
 
 end
+

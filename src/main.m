@@ -14,7 +14,7 @@ obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
         
 max_steps = 10000;
-frame = 100;
+frame = 100; % We display averages over this frame
 steps = 0;
 figure(1);
 avgRewardPlot = plot(nan, 'b*');
