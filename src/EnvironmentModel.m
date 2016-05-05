@@ -33,6 +33,7 @@ if prevEnvState == 0
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
         coords;];
+    hold off;
     return;
 end
 
@@ -52,5 +53,7 @@ currentEnvState = EnvState;
 % Update the plot of agent and environment to reflect current position
 %set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2));
 %drawnow
+hold on;
+plot(currentEnvState(1+1:amountOfConsumables/2,1),currentEnvState(1+1:amountOfConsumables/2,2),'g+', currentEnvState(1+amountOfConsumables/2+1:end,1),currentEnvState(1+amountOfConsumables/2+1:end,2),'r+');
 plot(currentEnvState(1,1),currentEnvState(1,2),'b*');
 end

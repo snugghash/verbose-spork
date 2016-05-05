@@ -12,11 +12,10 @@ action = squareAgent(obsEnv, 0);
 max_steps = 10000;
 frame = 100;
 steps = 0;
-figure(1);
-avgRewardPlot = plot(nan);
-hold on;
-X = get(avgRewardPlot, 'XData');
-Y = get(avgRewardPlot, 'YData');
+%avgRewardPlot = plot(nan);
+%hold on;
+%X = get(avgRewardPlot, 'XData');
+%Y = get(avgRewardPlot, 'YData');
 while steps<=max_steps
     avgReward = 0;
     for i=1:100
@@ -27,6 +26,6 @@ while steps<=max_steps
         steps = steps+1;
     end
     avgReward = avgReward/100;
-    set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
-    drawnow
+    %set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
+    %drawnow
 end
