@@ -2,6 +2,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %UNTITLED2 Summary of this function goes here
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
+%   Format of obsEnv: (EYE,DISTANCE) TODO verify
 
 global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
 turnRate = 45;
@@ -18,6 +19,7 @@ end
 
 % Observing and assigning any blob and distance to it data
 j=0;
+obsEnv = Inf.*zeros(eyes,numThings+1) %TODO hardcoded
 for i=1:size(fullEnv(2:amountOfConsumables,:),1) % Number of consumables
     for line = 1:eyes
         % Check for intersection with circle of consumables

@@ -51,13 +51,13 @@ if(closestGoodDirection == 0)
         end
         action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(5,WALL)<5) %TODO Distance to start turning.
-        if(dbg)
-            display('Exploring, starting turn.')
-        end
-        % Randomly choose an angle to turn between turnRate and 180
-        turningActions = randi(3); %TODO
-        action = 2;
+    %elseif(obsState(5,WALL)<5) %TODO Distance to start turning.
+    %    if(dbg)
+    %        display('Exploring, starting turn.')
+    %    end
+    %    % Randomly choose an angle to turn between turnRate and 180
+    %    turningActions = randi(3); %TODO
+    %    action = 2;
     else 
         if(dbg)
             display('Exploring, moving forward.')
@@ -65,6 +65,9 @@ if(closestGoodDirection == 0)
         action = 1;
     end
 else
+    if(dbg)
+        display('Exploiting')
+    end
     % Collect good thing
     action = getGreedyAction(obsState, theta);
 end
