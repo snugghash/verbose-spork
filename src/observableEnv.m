@@ -4,7 +4,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   (pos) and the direction its looking in(dirVec).
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 
-global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings;
+global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
 turnRate = 45;
 visibility = 5*ballRadius; % Arbitally chosen
 angle = 135;
@@ -24,8 +24,28 @@ for i=1:size(fullEnv(2:amountOfConsumables,:),1) % Number of consumables
     for line = 1:eyes
         % Check for intersection with circle of consumables
         [xout,yout] = linecirc(obsDirs(line),0,fullEnv(1+i,1)-pos(1),...
-            fullEnv(1+i,2)-pos(2),ballRadius); 
-        if ~isnan(xout)
+        fullEnv(1+i,2)-pos(2),ballRadius); 
+        % Check for intersection with WALL, (boundary a.t.m)
+
+        %[xWall, yWall] = [gridSize, -fullEnv(1,4)/fullEnv(1,3)*(gridSize-fullEnv(1,1)) + fullEnv(1,2)]
+        % Perpendicular distance
+        perpenDistanceX2 = gridSize - fullEnv(1,1);
+        % Distance along direction vector
+        DistanceToRightWallAlongSensor = perpenDistanceX2/sin(acos(abs(fullEnv(1,3)*1)));
+        perpenDistanceY2 = gridSize - fullEnv(1,2);
+        DistanceToTopWallAlongSensor = perpenDistanceY2/sin(acos(abs(fullEnv(1,4)*1)));
+        if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
+            if(DistanceToTopWallAlongSensor<visibility) 
+                obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+            end
+        else
+            if(DistanceToRightWallAlongSensor<visibility) 
+                obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
+            end
+        end
+
+
+if ~isnan(xout)
             % Intersection detected
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
