@@ -27,7 +27,7 @@ if prevEnvState == 0
     figure(2);
     positionPlot = plot(coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
     hold on;
-    agentPosition = [1 1];
+    agentPosition = [gridSize/2 gridSize/2];
     agentDirection = [1 0];
     figure(2);
     plot(agentPosition(1),agentPosition(2),'b*');
@@ -59,6 +59,6 @@ end
 currentEnvState = EnvState;
 figure(2);
 hold on;
-set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2));
+set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
 drawnow
 end
