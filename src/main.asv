@@ -1,4 +1,4 @@
-dbg = str2num(input('Do you want to debug = ','s'));
+dbg = input('Do you want to debug',s);
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
@@ -14,20 +14,13 @@ max_steps = 10000;
 frame = 100;
 steps = 0;
 figure(1);
-avgRewardPlot = plot(nan, 'b*');
+avgRewardPlot = plot(nan);
 hold on;
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
-
-if dbg == 1 
-    display('In main: before while');
-end
-j=0;
 while steps<=max_steps
     if dbg == 1 
-        display(['Steps(Age): ' num2str(steps)]);
-        display(['Action Taken: ' num2str(action)]);
-        display(obsEnv);
+        display(steps); 
     end
     avgReward = 0;
     for i=1:100
@@ -38,12 +31,6 @@ while steps<=max_steps
         steps = steps+1;
     end
     avgReward = avgReward/100;
-    % To display all the previous points in the plot.
-    j=j+1;
-    temp1(j) = round(steps/100);
-    temp2(j) = avgReward;
-    figure(1);
-    hold on;
-    set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
+    set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
     drawnow
 end
