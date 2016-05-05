@@ -40,9 +40,10 @@ if(closestGoodDirection == 0)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
+    % turningActions stores the number of *turning actions* that are left for us to do, in order point in the desired direction.
     global turningActions;
     if(turningActions~=0) 
-        action = 2; 
+        action = 1; 
         turningActions = turningActions -1;
     elseif(obsState(5,WALL)<Inf)
         % Randomly choose an angle to turn between turnRate and 180

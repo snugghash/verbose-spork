@@ -26,7 +26,7 @@ j=0;
 while steps<=max_steps
     if dbg == 1 
         display(['Steps(Age): ' num2str(steps)]);
-        display(['Action Taken: ' num2str(action)]);
+        display(['Action taken last step: ' num2str(action)]);
         display(obsEnv);
     end
     avgReward = 0;
