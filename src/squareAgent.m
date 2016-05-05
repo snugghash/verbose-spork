@@ -14,7 +14,7 @@ function [ action ] = squareAgent( obsState, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg;
 j=0;
 epsilon = 0.1;
 learningRate = 0.3;
@@ -27,7 +27,8 @@ if(isempty(theta))
 end
 
 %% Selecting next action
-% Get distance to closest good thing
+% Exploration-exploitation policy:
+% Get distance to closest good thing. 
 closestGoodDistance = Inf;
 closestGoodDirection = 0;
 for i=1:eyes
@@ -36,19 +37,31 @@ for i=1:eyes
         closestGoodDirection = i;
     end
 end
+% If nothing good found,
 if(closestGoodDirection == 0)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
+    % turningActions stores the number of *turning actions* that are left for us to do, in order point in the desired direction.
     global turningActions;
-    if(turningActions~=0) 
-        action = 1; 
+    
+    if(turningActions>0) 
+        if(dbg)
+            display('Exploring, turning.')
+        end
+        action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(5,WALL)<Inf)
+    elseif(obsState(5,WALL)<5) %TODO Distance to start turning.
+        if(dbg)
+            display('Exploring, starting turn.')
+        end
         % Randomly choose an angle to turn between turnRate and 180
-        turningActions = randi(3); 
+        turningActions = randi(3); %TODO
         action = 2;
     else 
+        if(dbg)
+            display('Exploring, moving forward.')
+        end
         action = 1;
     end
 else
@@ -72,3 +85,4 @@ previousState = obsState;
 previousAction = action;
 
 end
+

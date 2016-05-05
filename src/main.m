@@ -1,17 +1,20 @@
+global dbg gridSize;
 dbg = str2num(input('Do you want to debug = ','s'));
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
 
+gridSize = 100;
+
 % Start the bot
-pos = [1 1];
+pos = [round(gridSize/2) round(gridSize/2)];
 vec = [0 1];
 vec = vec / norm(vec);
 obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
         
 max_steps = 10000;
-frame = 100;
+frame = 100; % We display averages over this frame
 steps = 0;
 figure(1);
 avgRewardPlot = plot(nan, 'b*');
@@ -26,7 +29,7 @@ j=0;
 while steps<=max_steps
     if dbg == 1 
         display(['Steps(Age): ' num2str(steps)]);
-        display(['Action Taken: ' num2str(action)]);
+        display(['Action taken last step: ' num2str(action)]);
         display(obsEnv);
     end
     avgReward = 0;
