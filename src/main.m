@@ -22,7 +22,7 @@ Y = get(avgRewardPlot, 'YData');
 if dbg == 1 
     display('In main: before while');
 end
-
+j=0;
 while steps<=max_steps
     if dbg == 1 
         display(['Steps(Age): ' num2str(steps)]);
@@ -38,9 +38,12 @@ while steps<=max_steps
         steps = steps+1;
     end
     avgReward = avgReward/100;
-%     set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
+    % To display all the previous points in the plot.
+    j=j+1;
+    temp1(j) = round(steps/100);
+    temp2(j) = avgReward;
     figure(1);
     hold on;
-    set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
+    set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
     drawnow
 end
