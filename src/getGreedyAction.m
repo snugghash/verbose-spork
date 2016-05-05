@@ -1,9 +1,9 @@
 function maxAction = getGreedyAction(obsState, theta)
-max = -Inf;
+maxValue = -Inf;
 for j=1:3
     tmp = actionValueApprox(theta, obsState, j);
-    if tmp>max
-        max = tmp;
+    if tmp>maxValue
+        maxValue = tmp;
         maxAction = j;
     end
 end
