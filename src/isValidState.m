@@ -1,4 +1,5 @@
-function ans = isValidState (Env, state)
+function ans = isValidState (state)
+    global gridSize;
     if state(1,1)<0 || state(1,2)<0 || state(1,1)>gridSize || state(1,2)>gridSize
         ans = 0;
     else
