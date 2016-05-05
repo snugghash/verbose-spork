@@ -64,8 +64,8 @@ currentEnvState = EnvState;
 figure(2);
 hold on;
 set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
-u = currentEnvState(1,1) + visibility * currentEnvState(1,3);
-v = currentEnvState(1,2) + visibility * currentEnvState(1,4);
+u = visibility * currentEnvState(1,3);
+v = visibility * currentEnvState(1,4);
 quiver(currentEnvState(1,1),currentEnvState(1,2),u,v)
 drawnow
 end

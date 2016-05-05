@@ -4,7 +4,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   (pos) and the direction its looking in(dirVec).
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 
-global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
+global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings;
 turnRate = 45;
 visibility = 5*ballRadius; % Arbitally chosen
 angle = 135;
