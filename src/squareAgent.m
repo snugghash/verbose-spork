@@ -42,7 +42,7 @@ if(closestGoodDirection == 0)
     % going.
     global turningActions;
     if(turningActions~=0) 
-        action = 2; 
+        action = 1; 
         turningActions = turningActions -1;
     elseif(obsState(5,WALL)<Inf)
         % Randomly choose an angle to turn between turnRate and 180

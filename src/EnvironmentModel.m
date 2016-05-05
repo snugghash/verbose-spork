@@ -2,7 +2,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize;
+global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize visibility;
 % Generate Grid
 gridSize = 100;
 WALL = 1;
@@ -62,5 +62,8 @@ currentEnvState = EnvState;
 figure(2);
 hold on;
 set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
+u = currentEnvState(1,1) + visibility * currentEnvState(1,3);
+v = currentEnvState(1,2) + visibility * currentEnvState(1,4);
+quiver(currentEnvState(1,1),currentEnvState(1,2),u,v)
 drawnow
 end
