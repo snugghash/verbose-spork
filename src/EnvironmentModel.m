@@ -3,8 +3,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %   Detailed explanation goes here
 
 global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize;
-% Generate Grid
-gridSize = 100;
+% Generate Grid % Grid size defined in main.m
 WALL = 1;
 GOOD = 2;
 BAD = 3;
@@ -26,7 +25,7 @@ if prevEnvState == 0
     figure(2);
     positionPlot = plot(coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
     hold on;
-    agentPosition = [1 1];
+    agentPosition = [round(gridSize/2) round(gridSize/2)];
     agentDirection = [1 0];
     figure(2);
     title('Agent and environment');

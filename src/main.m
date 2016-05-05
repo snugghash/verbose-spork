@@ -1,10 +1,13 @@
+global dbg gridSize;
 dbg = str2num(input('Do you want to debug = ','s'));
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
 
+gridSize = 100;
+
 % Start the bot
-pos = [1 1];
+pos = [round(gridSize/2) round(gridSize/2)];
 vec = [0 1];
 vec = vec / norm(vec);
 obsEnv = observableEnv(EnvState, pos, vec);
