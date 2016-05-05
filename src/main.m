@@ -14,18 +14,20 @@ max_steps = 10000;
 frame = 100;
 steps = 0;
 figure(1);
-avgRewardPlot = plot(nan);
+avgRewardPlot = plot(nan, 'b*');
 hold on;
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
 
 if dbg == 1 
-    display('In main: becclearfore while');
+    display('In main: before while');
 end
 
 while steps<=max_steps
     if dbg == 1 
-        display(steps);
+        display(['Steps(Age): ' num2str(steps)]);
+        display(['Action Taken: ' num2str(action)]);
+        display(obsEnv);
     end
     avgReward = 0;
     for i=1:100
@@ -36,6 +38,9 @@ while steps<=max_steps
         steps = steps+1;
     end
     avgReward = avgReward/100;
+%     set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
+    figure(1);
+    hold on;
     set(avgRewardPlot, 'XData', [X round(steps/100)], 'YData', [Y avgReward]);
     drawnow
 end

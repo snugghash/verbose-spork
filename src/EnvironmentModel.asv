@@ -40,7 +40,8 @@ if prevEnvState == 0
     return;
 else
     figure(2);
-    positionPlot = plot(prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+2:end,2),'r+');
+    positionPlot = plot(prevEnvState(2:amountOfConsumables/2+1,1), ); prevEnvState
+    positionPlot = plot(prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+1:end,2),'r+');
     hold on;
 end
 

@@ -45,7 +45,7 @@ if(closestGoodDirection == 0)
         action = 2; 
         turningActions = turningActions -1;
     elseif(obsState(5,WALL)<Inf)
-        % Randomly choose an anglue to turn between turnRate and 180
+        % Randomly choose an angle to turn between turnRate and 180
         turningActions = randi(3); 
         action = 2;
     else 
