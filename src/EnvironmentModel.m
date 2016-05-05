@@ -36,6 +36,7 @@ if prevEnvState == 0
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
         coords;];
+    %hold off;
     return;
 else
     figure(2);
@@ -62,5 +63,4 @@ figure(2);
 hold on;
 set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2));
 drawnow
-%plot(currentEnvState(1,1),currentEnvState(1,2),'b*');
 end
