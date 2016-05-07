@@ -6,7 +6,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize visibility;
 
 % Generate Grid % Grid size defined in main.m
-
+gridSize = 100;
 WALL = 1;
 GOOD = 2;
 BAD = 3;

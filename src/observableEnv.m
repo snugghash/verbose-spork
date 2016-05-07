@@ -4,7 +4,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   (pos) and the direction its looking in(dirVec).
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 
-global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables;
+global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings gridSize;
 turnRate = 45;
 visibility = 5*ballRadius; % Arbitally chosen
 angle = 135;
@@ -19,7 +19,7 @@ end
 
 % Observing and assigning any blob and distance to it data
 j=0;
-obsEnv = Inf.*zeros(eyes,numThings+1) %TODO hardcoded
+obsEnv = Inf.*zeros(eyes,numThings+1); %TODO hardcoded
 for i=1:size(fullEnv(2:amountOfConsumables,:),1) % Number of consumables
     for line = 1:eyes
         % Check for intersection with circle of consumables
@@ -45,7 +45,7 @@ for i=1:size(fullEnv(2:amountOfConsumables,:),1) % Number of consumables
         end
 
 
-if ~isnan(xout)
+        if ~isnan(xout)
             % Intersection detected
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
