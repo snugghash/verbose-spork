@@ -2,8 +2,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot gridSize visibility;
+global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot gridSize visibility axPosition moveSlow;
 
 % Generate Grid % Grid size defined in main.m
 gridSize = 100;
@@ -16,6 +15,7 @@ ballRadius = 5;
 objectRadius = 5;
 numThings = 2; % No walls
 amountOfConsumables = 30;
+visibility = 5*ballRadius;
 
 reward = 0;
 if prevEnvState == 0
@@ -25,25 +25,24 @@ if prevEnvState == 0
     coords(1:amountOfConsumables/2,3) = GOOD;
     coords(amountOfConsumables/2+1:end,4) = negR;
     coords(1:amountOfConsumables/2,4) = plusR;
-    figure(2);
-    positionPlot = plot(coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
-    hold on;
+    positionPlot = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
     agentPosition = [round(gridSize/2) round(gridSize/2)];
     agentDirection = [1 0];
-    figure(2);
-    title('Agent and environment');
-    plot(agentPosition(1),agentPosition(2),'b*');
-    hold on;
     
+    title('Agent and environment');
+    positionAgent = plot(axPosition, agentPosition(1),agentPosition(2),'b*');
+        
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
         coords;];
-    %hold off;
+    
+    u = visibility * currentEnvState(1,3);
+    v = visibility * currentEnvState(1,4);
+    quiverPlot = quiver(axPosition, currentEnvState(1,1),currentEnvState(1,2),u,v);
+    
     return;
 else
-    figure(2);
-    positionPlot = plot(prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+2:end,2),'r+');
-    hold on;
+    positionPlot = plot(axPosition,prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+2:end,2),'r+');
 end
 
 % Update the state from last action
@@ -61,11 +60,14 @@ end
 currentEnvState = EnvState;
 
 % Update the plot of agent and environment to reflect current position
-figure(2);
-hold on;
-set(positionPlot, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
+set(positionAgent, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
 u = visibility * currentEnvState(1,3);
 v = visibility * currentEnvState(1,4);
-quiver(currentEnvState(1,1),currentEnvState(1,2),u,v)
+set(quiverPlot, 'XData', currentEnvState(1,1),...
+                'YData',currentEnvState(1,2),...
+                'UData', u, 'VData', v);
+if(moveSlow == 1)
+    pause(0.1)
+end
 drawnow
 end

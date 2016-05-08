@@ -1,5 +1,20 @@
-global dbg gridSize;
+global dbg moveSlow gridSize axPosition axReward positionPlot quiverPlot;
 dbg = str2num(input('Do you want to debug = ','s'));
+moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
+
+% Setting up axes for the plots and hold 'on'
+axPosition = subplot(3,3,[1 2 3 4 5 6]);
+axReward = subplot(3,3,[7 8 9]);
+hold(axPosition,'on');
+hold(axReward,'on');
+
+% Initializing the plots
+positionPlot = plot(axPosition,0,0); % Just to initialize it
+quiverPlot = quiver(axPosition,50,50,0,1);
+avgRewardPlot = plot(axReward, nan, 'b*');
+X = get(avgRewardPlot, 'XData');
+Y = get(avgRewardPlot, 'YData');
+
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
@@ -12,15 +27,10 @@ vec = [0 1];
 vec = vec / norm(vec);
 obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
-        
+
 max_steps = 10000;
 frame = 100; % We display averages over this frame
 steps = 0;
-figure(1);
-avgRewardPlot = plot(nan, 'b*');
-hold on;
-X = get(avgRewardPlot, 'XData');
-Y = get(avgRewardPlot, 'YData');
 
 if dbg == 1 
     display('In main: before while');
@@ -32,6 +42,7 @@ while steps<=max_steps
         display(['Action taken last step: ' num2str(action)]);
         display(obsEnv);
     end
+%     axes(axPosition);
     avgReward = 0;
     for i=1:100
         obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
@@ -45,8 +56,7 @@ while steps<=max_steps
     j=j+1;
     temp1(j) = round(steps/100);
     temp2(j) = avgReward;
-    figure(1);
-    hold on;
     set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
+    hold on
     drawnow
 end
