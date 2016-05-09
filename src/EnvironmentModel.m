@@ -56,9 +56,9 @@ end
 % Update the state from last action
 EnvState = getNextState(prevEnvState, action);
 % Calculate reward, check for same position as consumables, replace it with
-% random position consumable
+% random position consumable % TODO: blob eat contract. ballRadius * (1 or 2)
 for i = 1:amountOfConsumables
-    if EnvState(1+i,[1 2]) == EnvState(1,[1 2])
+    if norm( (EnvState(1+i,[1 2]) - EnvState(1,[1 2])), 2 ) <= ballRadius
         reward = EnvState(1+i,4);
         % Generate a consumable
         newblob = randi(gridSize, 1,2);
