@@ -76,7 +76,7 @@ end
 % If previousState exists, update it.
 if(isempty(previousState)==0)
     if obsState ~= previousState
-        delta = lastReward + actionValueApprox(obsState,action) - actionValueApprox(previousState,previousAction);
+        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
         i = actionToEye(previousAction);
         [tmp j] = min(previousState(i,:));
         theta(i,j) = theta(i,j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[i j]);

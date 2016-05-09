@@ -2,7 +2,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot gridSize visibility axPosition moveSlow;
+global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes;
 
 % Generate Grid % Grid size defined in main.m
 gridSize = 100;
@@ -16,6 +16,7 @@ objectRadius = 5;
 numThings = 2; % No walls
 amountOfConsumables = 30;
 visibility = 5*ballRadius;
+eyes = 9;
 
 reward = 0;
 if prevEnvState == 0
@@ -39,9 +40,16 @@ if prevEnvState == 0
     u = visibility * currentEnvState(1,3);
     v = visibility * currentEnvState(1,4);
     quiverPlot = quiver(axPosition, currentEnvState(1,1),currentEnvState(1,2),u,v);
+%     if(sideWings == 1)
+%         for i = 1:eyes
+% %             quiverSidePlot(i) = 
+%         end
+%     end
     
     return;
 else
+    % TODO: Should we use this instead of set()? Will it increase the
+    % performance?
     positionPlot = plot(axPosition,prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+2:end,2),'r+');
 end
 

@@ -1,6 +1,10 @@
-global dbg moveSlow gridSize axPosition axReward positionPlot quiverPlot;
+global dbg sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes;
 dbg = str2num(input('Do you want to debug = ','s'));
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
+sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
+init();
+eyes = 9;
+reward=0;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -11,6 +15,9 @@ hold(axReward,'on');
 % Initializing the plots
 positionPlot = plot(axPosition,0,0); % Just to initialize it
 quiverPlot = quiver(axPosition,50,50,0,1);
+for i = 1:eyes
+    quiverSidePlot(i) = quiver(axPosition, 0,0,0,0);
+end
 avgRewardPlot = plot(axReward, nan, 'b*');
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
@@ -46,7 +53,7 @@ while steps<=max_steps
     avgReward = 0;
     for i=1:100
         obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
-        action = squareAgent(obsEnv);
+        action = squareAgent(obsEnv, reward);
         [EnvState, reward] = EnvironmentModel(EnvState, action);
         avgReward = avgReward+reward;
         steps = steps+1;
