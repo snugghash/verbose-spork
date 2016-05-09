@@ -14,7 +14,7 @@ function [ action ] = squareAgent( obsState, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten;
 j=0;
 epsilon = 0.1;
 learningRate = 0.3;
@@ -29,7 +29,7 @@ end
 %% Selecting next action
 % Exploration-exploitation policy:
 % Get distance to closest good thing. 
-closestGoodDistance = Inf;
+closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
 for i=1:eyes
     if(obsState(i,GOOD) < closestGoodDistance)
@@ -38,7 +38,7 @@ for i=1:eyes
     end
 end
 % If nothing good found,
-if(closestGoodDirection == 0)
+if(closestGoodDirection == 0 || blobsEaten<1)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.

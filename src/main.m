@@ -1,10 +1,12 @@
-global dbg sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes;
+clear all %TODO remove if coming from previous theta. Add to options, like debug.
+global dbg sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 dbg = str2num(input('Do you want to debug = ','s'));
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
 sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
 init();
 eyes = 9;
-reward=0;
+reward = 0;
+blobsEaten = 0;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -57,6 +59,9 @@ while steps<=max_steps
         [EnvState, reward] = EnvironmentModel(EnvState, action);
         avgReward = avgReward+reward;
         steps = steps+1;
+        if moveSlow && dbg
+            display(obsEnv);
+        end
     end
     avgReward = avgReward/100;
     % To display all the previous points in the plot.

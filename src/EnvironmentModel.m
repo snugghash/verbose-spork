@@ -2,7 +2,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes;
+global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes blobsEaten;
 
 % Generate Grid % Grid size defined in main.m
 gridSize = 100;
@@ -13,7 +13,7 @@ negR = -2;
 plusR = 1;
 ballRadius = 5;
 objectRadius = 5;
-numThings = 2; % No walls
+numThings = 3; 
 amountOfConsumables = 30;
 visibility = 5*ballRadius;
 eyes = 9;
@@ -63,6 +63,8 @@ for i = 1:amountOfConsumables
         % Generate a consumable
         newblob = randi(gridSize, 1,2);
         EnvState(1+i,[1 2]) = newblob;
+        blobsEaten = blobsEaten + 1;
+        % TODO Check for new coords on the old ones... instant food. 
     end
 end
 currentEnvState = EnvState;

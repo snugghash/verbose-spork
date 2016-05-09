@@ -6,8 +6,8 @@ global numThings
 i = actionToEye(action);
 action_value = 0;
 for tmp=1:length(i)
-for j=1:numThings
-    action_value = action_value + 1/state(i(tmp),j) * theta(i(tmp),j);
-end
+    for j=1:numThings
+        action_value = action_value + 1/state(i(tmp),j)*theta(i(tmp),j)/length(i);
+    end
 end
 end
