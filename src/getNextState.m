@@ -5,7 +5,7 @@ if action == 1 % Forward
     envState(1,1) = prevState(1,1) + prevState(1,3);
     envState(1,2) = prevState(1,2) + prevState(1,4);
     if ~isValidState(envState)
-        envState = prevState;
+        envState = prevState; % Should equate only the action row
         return;
     end
 elseif action==2 % Counter clockwise
