@@ -68,10 +68,14 @@ for line = 1:eyes
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if temp(1)<=temp(2) % temp(1) is not necessarily smallest
                 if temp(1)<=visibility
-                    obsEnv(line, obsEnvSpace(i,3)) = temp(1);
+                    if(obsEnv(line, obsEnvSpace(i,3)) > temp(1))
+                        obsEnv(line, obsEnvSpace(i,3)) = temp(1);
+                    end
                 end
             elseif temp(2) <= visibility
-                obsEnv(line, obsEnvSpace(i,3)) = temp(2);
+                    if(obsEnv(line, obsEnvSpace(i,3)) > temp(2))
+                        obsEnv(line, obsEnvSpace(i,3)) = temp(2);
+                    end
             end
         else
             % No intersection
