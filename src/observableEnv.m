@@ -57,7 +57,7 @@ for line = 1:eyes
     % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
     % the middle sensor
     %DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-    DistanceToRightWallAlongSensor = perpenDistanceX2/cosd(obsDirs(line)));
+    DistanceToRightWallAlongSensor = perpenDistanceX2/cosd(obsDirs(line));
     perpenDistanceY2 = min(gridSize-fullEnv(1,2), -fullEnv(1,2));
     %DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
     DistanceToTopWallAlongSensor = perpenDistanceY2/sind(obsDirs(line));
