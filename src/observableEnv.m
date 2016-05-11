@@ -100,13 +100,13 @@ actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
 % TODO: Defining the obs environment
 if(sideWings == 1)
-        for i=1:eyes
-            u = visibility * cosd(obsDirs(i));
-            v = visibility * sind(obsDirs(i));
-            set(quiverSidePlot(i), 'XData', fullEnv(1,1),...
-            'YData',fullEnv(1,2),...
-            'UData', u, 'VData', v);
-        end
+    for i=1:eyes
+        u = visibility * cosd(obsDirs(i));
+        v = visibility * sind(obsDirs(i));
+        set(quiverSidePlot(i), 'XData', fullEnv(1,1),...
+        'YData',fullEnv(1,2),...
+        'UData', u, 'VData', v);
+    end
 end
 
 end

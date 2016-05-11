@@ -55,7 +55,7 @@ while steps<=max_steps
     end
 %     axes(axPosition);
     avgReward = 0;
-    for i=1:100
+    for i=1:frame
         obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
         action = squareAgent(obsEnv, reward);
         [EnvState, reward] = EnvironmentModel(EnvState, action);
@@ -63,12 +63,13 @@ while steps<=max_steps
         steps = steps+1;
         if moveSlow && dbg
             display(obsEnv);
+            display(reward);
         end
     end
-    avgReward = avgReward/100;
+    avgReward = avgReward/frame;
     % To display all the previous points in the plot.
     j=j+1;
-    temp1(j) = round(steps/100);
+    temp1(j) = round(steps/frame);
     temp2(j) = avgReward;
     set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
     hold on
