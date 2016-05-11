@@ -50,15 +50,17 @@ obsEnv = GAMMA.*ones(eyes,numThings); %TODO hardcoded
 for line = 1:eyes
     % Check for intersection with WALL, (boundary a.t.m)
     % Perpendicular distance
-    perpenDistanceX2 = gridSize - fullEnv(1,1);
+    perpenDistanceX2 = min(gridSize-fullEnv(1,1), fullEnv(1,1));
     % Distance along direction vector
     % Corrected distances - (Remove later)
     % Changed: [cos(a) sin(a)][1;0] for top wall, similarly for the
     % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
     % the middle sensor
-    DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-    perpenDistanceY2 = gridSize - fullEnv(1,2);
-    DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
+    %DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
+    DistanceToRightWallAlongSensor = perpenDistanceX2/abs(cosd(abs(obsDirs(line))));
+    perpenDistanceY2 = min(gridSize-fullEnv(1,2), fullEnv(1,2));
+    %DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
+    DistanceToTopWallAlongSensor = perpenDistanceY2/sind(abs(obsDirs(line)));
     if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
         if(DistanceToTopWallAlongSensor<visibility) 
             obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
