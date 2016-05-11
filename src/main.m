@@ -1,5 +1,6 @@
+close all % To close the figures
 clear all %TODO remove if coming from previous theta. Add to options, like debug.
-global dbg sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
+global dbg sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 dbg = str2num(input('Do you want to debug = ','s'));
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
 sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
@@ -7,6 +8,7 @@ init();
 eyes = 9;
 reward = 0;
 blobsEaten = 0;
+gridSize = 100;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -16,7 +18,7 @@ hold(axReward,'on');
 
 % Initializing the plots
 positionPlot = plot(axPosition,0,0); % Just to initialize it
-quiverPlot = quiver(axPosition,50,50,0,1);
+quiverPlot = quiver(axPosition,50,50,1,0);
 for i = 1:eyes
     quiverSidePlot(i) = quiver(axPosition, 0,0,0,0);
 end
@@ -24,16 +26,16 @@ avgRewardPlot = plot(axReward, nan, 'b*');
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
 
+% Initialize the bot's position in the space
+pos = [round(gridSize/2) round(gridSize/2)];
+vec = [1 0]; % Changed from [0 1] to be coherent (inherent direction)
+vec = vec / norm(vec);
+
 % Generate Environment
 EnvState = 0;
 [EnvState, ~] = EnvironmentModel(EnvState, 1);
 
-gridSize = 100;
-
 % Start the bot
-pos = [round(gridSize/2) round(gridSize/2)];
-vec = [0 1];
-vec = vec / norm(vec);
 obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
 

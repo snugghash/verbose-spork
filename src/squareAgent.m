@@ -28,7 +28,7 @@ end
 
 %% Selecting next action
 % Exploration-exploitation policy:
-% Get distance to closest good thing. 
+% Get distance to closest good thing. [It explores only the closest good thing]
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
 for i=1:eyes
@@ -38,7 +38,7 @@ for i=1:eyes
     end
 end
 % If nothing good found,
-if(closestGoodDirection == 0 || blobsEaten<1)
+if(closestGoodDirection == 0 )% || blobsEaten<1)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
