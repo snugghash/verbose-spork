@@ -50,23 +50,39 @@ obsEnv = GAMMA.*ones(eyes,numThings); %TODO hardcoded
 for line = 1:eyes
     % Check for intersection with WALL, (boundary a.t.m)
     % Perpendicular distance
-    perpenDistanceX2 = min(gridSize-fullEnv(1,1), fullEnv(1,1));
+    perpenDistanceX2 = min(gridSize-fullEnv(1,1), -fullEnv(1,1));
     % Distance along direction vector
     % Corrected distances - (Remove later)
     % Changed: [cos(a) sin(a)][1;0] for top wall, similarly for the
     % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
     % the middle sensor
     %DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-    DistanceToRightWallAlongSensor = perpenDistanceX2/abs(cosd(abs(obsDirs(line))));
-    perpenDistanceY2 = min(gridSize-fullEnv(1,2), fullEnv(1,2));
+    DistanceToRightWallAlongSensor = perpenDistanceX2/cosd(obsDirs(line)));
+    perpenDistanceY2 = min(gridSize-fullEnv(1,2), -fullEnv(1,2));
     %DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
-    DistanceToTopWallAlongSensor = perpenDistanceY2/sind(abs(obsDirs(line)));
-    if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
-        if(DistanceToTopWallAlongSensor<visibility) 
-            obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+    DistanceToTopWallAlongSensor = perpenDistanceY2/sind(obsDirs(line));
+    if DistanceToTopWallAlongSensor>0
+        if DistanceToRightWallAlongSensor>0
+            if DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor
+                if DistanceToTopWallAlongSensor<visibility 
+                    obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+                elseif DistanceToRightWallAlongSensor<visibility
+                    obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
+                end
+            else
+                if DistanceToRightWallAlongSensor<visibility
+                    obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
+                elseif DistanceToTopWallAlongSensor<visibility
+                    obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+                end
+            end
+        else
+            if DistanceToTopWallAlongSensor<visibility
+                obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+            end
         end
-    else
-        if(DistanceToRightWallAlongSensor<visibility) 
+    elseif DistanceToRightWallAlongSensor>0
+        if DistanceToRightWallAlongSensor<visibility
             obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
         end
     end
