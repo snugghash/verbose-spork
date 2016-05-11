@@ -75,7 +75,7 @@ end
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
-    if obsState ~= previousState
+    if any(obsState(:) ~= previousState(:))
         delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
         i = actionToEye(previousAction);
         [tmp j] = min(previousState(i,:));
