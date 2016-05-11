@@ -2,7 +2,7 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 %UNTITLED3 Summary of this function goes here
 %   Detailed explanation goes here
 
-global numThings ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes blobsEaten;
+global numThings vec ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes blobsEaten;
 
 % Generate Grid % Grid size defined in main.m
 gridSize = 100;
@@ -28,7 +28,7 @@ if prevEnvState == 0
     coords(1:amountOfConsumables/2,4) = plusR;
     positionPlot = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
     agentPosition = [round(gridSize/2) round(gridSize/2)];
-    agentDirection = [1 0];
+    agentDirection = vec;
     
     title('Agent and environment');
     positionAgent = plot(axPosition, agentPosition(1),agentPosition(2),'b*');

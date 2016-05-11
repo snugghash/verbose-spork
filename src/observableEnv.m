@@ -21,9 +21,10 @@ relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) 
 obsEnvSpace = relativePos(  (sum(abs(relativePos(:,1:2))<(visibility + ballRadius),2) == 2), :  );
 % relativeDistance will yield exact result : Radial Distance 
 % Agario uses a box hence use obsEnvSpace in future
+% [New] Here we are having radial check for the relative distance
 relativePosObs = [obsEnvSpace(:,1) obsEnvSpace(:,2)];
 relativeDistance = sqrt(relativePosObs(:,1).^2 + relativePosObs(:,2).^2);
-% These are the actual things that is seen by the agent.
+% These are the actual things that is seen by the agent. [In a radial sense equal in all directions]
 obsEnvSpace = obsEnvSpace( (relativeDistance<(visibility + ballRadius)), : );
 % Reconditioning the obsEnvSpace in the absolute coordinates
 obsEnvSpace = [obsEnvSpace(:,1)+pos(1) obsEnvSpace(:,2)+pos(2) obsEnvSpace(:,3) obsEnvSpace(:,4)];
@@ -33,6 +34,16 @@ dirVecAngle = atand(dirVec(2)/dirVec(1));
 for i = 1:eyes
     obsDirs(i) = dirVecAngle - ((eyes+1)/2 - i)*(angle/eyes);
 end
+
+% Things in the field of view within visibility
+relativePosObs = [obsEnvSpace(:,1)-pos(1) obsEnvSpace(:,2)-pos(1)];
+thetaRotation = atan2d(dirVec(2), dirVec(1));
+rotationMatrix = [cosd(thetaRotation) -sind(thetaRotation); sind(thetaRotation) cosd(thetaRotation)];
+rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix; 
+relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
+obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(obsDirs(end)-thetaRotation)), :);
+
+
 
 % Observing and assigning any blob and distance to it data
 obsEnv = GAMMA.*ones(eyes,numThings); %TODO hardcoded
@@ -92,6 +103,8 @@ if(sideWings == 1)
             'YData',fullEnv(1,2),...
             'UData', u, 'VData', v);
         end
-    end
+end
 
 end
+
+% TODO: Feel that its not setting the sector as the observable environment

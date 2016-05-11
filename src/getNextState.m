@@ -9,11 +9,10 @@ if action == 1 % Forward
         return;
     end
 elseif action==2 % Counter clockwise
-    envState(1,3) = cos(turnRate)*prevState(1,3); %TODO 90\deg
-    envState(1,4) = sin(turnRate)*prevState(1,4);
+    envState(1,3) = ( prevState(1,3)*cosd(turnRate) - prevState(1,4)*sind(turnRate) );
+    envState(1,4) = ( prevState(1,3)*sind(turnRate) + prevState(1,4)*cosd(turnRate) );
 elseif action==3 % Clockwise
-    envState(1,3) = cos(turnRate)*prevState(1,3);
-    envState(1,4) = -sin(turnRate)*prevState(1,4);
-    
+    envState(1,3) = ( prevState(1,3)*cosd(turnRate) + prevState(1,4)*sind(turnRate) );
+    envState(1,4) = ( - prevState(1,3)*sind(turnRate) + prevState(1,4)*cosd(turnRate) );    
 end
 end
