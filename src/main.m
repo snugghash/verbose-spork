@@ -64,6 +64,7 @@ while steps<=max_steps
         steps = steps+1;
         if moveSlow && dbg
             display(obsEnv);
+            display(reward);
         end
     end
     avgReward = avgReward/frame;

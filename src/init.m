@@ -25,6 +25,5 @@ turnRate = 45;
 angle = 135;
 GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable.
 
-
 end
 

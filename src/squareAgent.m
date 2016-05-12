@@ -53,13 +53,15 @@ if(closestGoodDirection == 0 )% || blobsEaten<1)
     % going.
     % turningActions stores the number of *turning actions* that are left
     % for us to do, in order point in the desired direction.
+
     if(turningActions>0) 
         if(dbg)
             display('Exploring, turning.')
         end
         action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(round(eyes/2)5,WALL,1)<5) %TODO HARDCODED Distance to start turning.
+
+    elseif(obsState(round(eyes/2),WALL)<5) %TODO HARDCODED Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end

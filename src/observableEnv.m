@@ -40,6 +40,7 @@ rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix;
 relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
 obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(obsDirs(end)-thetaRotation)), :);
 
+
 % Defining walls [L; T; R; B]
 x0 = fullEnv(1,1);
 y0 = fullEnv(1,2);
@@ -73,7 +74,6 @@ obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
 distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
 % min distance to any wall.
 distance = min(distance);
-
 
 for line = 1:eyes
     % Check for intersection with WALL, (boundary a.t.m)
@@ -115,12 +115,14 @@ for line = 1:eyes
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if temp(1)<=temp(2) % temp(1) is not necessarily smallest
                 if temp(1)<=visibility
+
                     obsEnv(line, obsEnvSpace(i,3),i) = temp(1);
 %                     obsEnvNew(1+i,line) = temp(1);
                 end
             elseif temp(2) <= visibility
                 obsEnv(line, obsEnvSpace(i,3),i) = temp(2);
 %                 obsEnvNew(1+i,line) = temp(2);
+
             end
 %             This option is by default.
 % % % %         else
@@ -139,8 +141,8 @@ if(sideWings == 1)
         u = visibility * cosd(obsDirs(i));
         v = visibility * sind(obsDirs(i));
         set(quiverSidePlot(i), 'XData', fullEnv(1,1),...
-            'YData',fullEnv(1,2),...
-            'UData', u, 'VData', v);
+        'YData',fullEnv(1,2),...
+        'UData', u, 'VData', v);
     end
 end
 
@@ -148,3 +150,4 @@ end
 
 % TODO: Feel that its not setting the sector as the observable environment
 % [Resolved]
+
