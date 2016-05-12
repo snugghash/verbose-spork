@@ -87,9 +87,11 @@ end
 if(isempty(previousState)==0)
     if any(stateClosest(:) ~= previousState(:))
         delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
-        i = actionToEye(previousAction);
-        [tmp j] = min(previousState(i,:));
-        theta(i,j) = theta(i,j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[i j]);
+        setOfSensors = actionToEye(previousAction);
+        for i_counter=1:length(setOfSensors)
+            [tmp j] = min(previousState(setOfSensors(i_counter),:));
+            theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]);
+        end
     end
 end
 
