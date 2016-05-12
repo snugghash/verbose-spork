@@ -14,7 +14,7 @@ function [ action ] = squareAgent( obsState, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions;
 j=0;
 epsilon = 0.1;
 learningRate = 0.3;
@@ -31,28 +31,35 @@ end
 % Get distance to closest good thing. [It explores only the closest good thing]
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
+stateClosest = GAMMA .* ones(eyes,numThings);
 for i=1:eyes
-    if(min(obsState(i,GOOD,:)) < closestGoodDistance)
-        [~, ind] = min(obsState(i,GOOD,:));
+    [minGood, ind] = min(obsState(i,GOOD,:));
+    stateClosest(i,GOOD) = minGood;
+    [minBad, ~] = min(obsState(i,BAD,:));
+    stateClosest(i,BAD) = minBad;
+    stateClosest(i,WALL) = obsState(i,WALL,1);
+    
+    if (minGood < closestGoodDistance)
+        % TODO: this code can be optimized
         closestGoodDistance = obsState(i,GOOD,ind);
         closestGoodDirection = i;
     end
+    
 end
 % If nothing good found,
 if(closestGoodDirection == 0 )% || blobsEaten<1)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
-    % turningActions stores the number of *turning actions* that are left for us to do, in order point in the desired direction.
-    global turningActions;
-    
+    % turningActions stores the number of *turning actions* that are left
+    % for us to do, in order point in the desired direction.
     if(turningActions>0) 
         if(dbg)
             display('Exploring, turning.')
         end
         action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(5,WALL,1)<5) %TODO HARDCODED Distance to start turning.
+    elseif(obsState(round(eyes/2)5,WALL,1)<5) %TODO HARDCODED Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end
@@ -70,13 +77,13 @@ else
         display('Exploiting')
     end
     % Collect good thing
-    action = getGreedyAction(obsState, theta);
+    action = getGreedyAction(stateClosest, theta);
 end
 
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
-    if obsState ~= previousState
+    if any(stateClosest(:) ~= previousState(:))
         delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
         i = actionToEye(previousAction);
         [tmp j] = min(previousState(i,:));
@@ -84,8 +91,8 @@ if(isempty(previousState)==0)
     end
 end
 
-%%
-previousState = obsState;
+%% TODO: @Suhas Please check the correctness of this change
+previousState = stateClosest;
 previousAction = action;
 
 end

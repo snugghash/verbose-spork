@@ -8,7 +8,6 @@ global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumabl
 
 actions = 5;
 
-
 % Shifting origin of axes.
 % Window of pos(coords) +/- (visibility + ballRadius)
 relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) fullEnv(2:end,4)];
@@ -62,44 +61,37 @@ dots = (sign(dots)+1)/2;
 % wrong distances by Inf as dividing it by 0 in dots.
 DistanceToWallAlongSensor = DistanceToWallAlongSensor ./ dots;
 
-% Observing and assigning any blob and distance to it data
-obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1));
-obsEnvNew = GAMMA.*ones(size(obsEnvSpace,1)+1, eyes+1);
+% Observing and assigning any blob and distance to it data. One extra copy
+% is created in case it becomes null.
+obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
+% obsEnvNew = GAMMA.*ones(size(obsEnvSpace,1)+1, eyes+1);
 % obsEnvNew(1,2:end) = wallDistanceofAllEyes;
 % Assigning type of the blob
-obsEnvNew(:,1) = [1; obsEnvSpace(:,3)];
+% obsEnvNew(:,1) = [1; obsEnvSpace(:,3)];
+
+% distance to the two required walls along the sensor
+distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
+% min distance to any wall.
+distance = min(distance);
+
 
 for line = 1:eyes
     % Check for intersection with WALL, (boundary a.t.m)
     % Perpendicular distance
-% %     perpenDistanceX2 = gridSize - fullEnv(1,1);
+    % %     perpenDistanceX2 = gridSize - fullEnv(1,1);
     % Distance along direction vector
     % Corrected distances - (Remove later)
     % Changed: [cos(a) sin(a)][1;0] for top wall, similarly for the
     % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
     % the middle sensor
-% %     DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-% %     perpenDistanceY2 = gridSize - fullEnv(1,2);
-% %     DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
-    distance = DistanceToWallAlongSensor( (DistanceToWallAlongSensor(:,line)<Inf),line );
-
-    if(size(distance) == 1)
-        if(distance<visibility) 
-            obsEnv(line, WALL,:) = distance;
-            obsEnvNew(1,line+1) = distance;
-        end
-    else
-        if(distance(1)<distance(2))
-            if(distance(1)<visibility) 
-                obsEnv(line, WALL,:) = distance(1);
-                obsEnvNew(1,line+1) = distance(1);
-            end
-        else
-            if(distance(2)<visibility) 
-                obsEnv(line, WALL,:) = distance(2);
-                obsEnvNew(1,line+1) = distance(2);
-            end
-        end
+    % %     DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
+    % %     perpenDistanceY2 = gridSize - fullEnv(1,2);
+    % %     DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
+    %     distance = DistanceToWallAlongSensor( (DistanceToWallAlongSensor(:,line)<Inf),line );
+    
+    % Assigning the min distance if within visibility
+    if(distance<visibility)
+        obsEnv(line, WALL,:) = distance;
     end
     
     
@@ -124,11 +116,11 @@ for line = 1:eyes
             if temp(1)<=temp(2) % temp(1) is not necessarily smallest
                 if temp(1)<=visibility
                     obsEnv(line, obsEnvSpace(i,3),i) = temp(1);
-                    obsEnvNew(1+i,line) = temp(1);
+%                     obsEnvNew(1+i,line) = temp(1);
                 end
             elseif temp(2) <= visibility
                 obsEnv(line, obsEnvSpace(i,3),i) = temp(2);
-                obsEnvNew(1+i,line) = temp(2);
+%                 obsEnvNew(1+i,line) = temp(2);
             end
 %             This option is by default.
 % % % %         else
@@ -143,13 +135,13 @@ actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
 % TODO: Defining the obs environment here
 if(sideWings == 1)
-        for i=1:eyes
-            u = visibility * cosd(obsDirs(i));
-            v = visibility * sind(obsDirs(i));
-            set(quiverSidePlot(i), 'XData', fullEnv(1,1),...
+    for i=1:eyes
+        u = visibility * cosd(obsDirs(i));
+        v = visibility * sind(obsDirs(i));
+        set(quiverSidePlot(i), 'XData', fullEnv(1,1),...
             'YData',fullEnv(1,2),...
             'UData', u, 'VData', v);
-        end
+    end
 end
 
 end
