@@ -113,16 +113,9 @@ for line = 1:eyes
             % Intersection detected
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
-            if temp(1)<=temp(2) % temp(1) is not necessarily smallest
-                if temp(1)<=visibility
-
-                    obsEnv(line, obsEnvSpace(i,3),i) = temp(1);
-%                     obsEnvNew(1+i,line) = temp(1);
-                end
-            elseif temp(2) <= visibility
-                obsEnv(line, obsEnvSpace(i,3),i) = temp(2);
-%                 obsEnvNew(1+i,line) = temp(2);
-
+            if min(temp)<=visibility
+                obsEnv(line, obsEnvSpace(i,3),i) = min(temp);
+                % obsEnvNew(1+i,line) = temp(1);
             end
 %             This option is by default.
 % % % %         else

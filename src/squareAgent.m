@@ -15,7 +15,7 @@ function [ action ] = squareAgent( obsState, lastReward )
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg, 
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
 global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions;
-j=0;
+% % j=0; [Does this have any use here? If no, please remove this.]
 epsilon = 0.1;
 learningRate = 0.3;
 discountFactor = 0.9;
@@ -86,7 +86,7 @@ end
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
     if any(stateClosest(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + actionValueApprox(theta,stateClosest,action) - actionValueApprox(theta,previousState,previousAction);
         i = actionToEye(previousAction);
         [tmp j] = min(previousState(i,:));
         theta(i,j) = theta(i,j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[i j]);
