@@ -32,8 +32,9 @@ end
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
 for i=1:eyes
-    if(obsState(i,GOOD) < closestGoodDistance)
-        closestGoodDistance = obsState(i,GOOD);
+    if(min(obsState(i,GOOD,:)) < closestGoodDistance)
+        [~, ind] = min(obsState(i,GOOD,:));
+        closestGoodDistance = obsState(i,GOOD,ind);
         closestGoodDirection = i;
     end
 end
@@ -51,7 +52,7 @@ if(closestGoodDirection == 0 )% || blobsEaten<1)
         end
         action = 2; 
         turningActions = turningActions -1;
-    elseif(obsState(5,WALL)<5) %TODO HARDCODED Distance to start turning.
+    elseif(obsState(5,WALL,1)<5) %TODO HARDCODED Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end
