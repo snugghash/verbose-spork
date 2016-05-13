@@ -17,7 +17,8 @@ hold(axPosition,'on');
 hold(axReward,'on');
 
 % Initializing the plots
-positionPlot = plot(axPosition,0,0); % Just to initialize it
+positionPlot(1) = plot(axPosition,0,0); % Good consumable handle
+positionPlot(2) = plot(axPosition,0,0); % Bad consumable handle
 quiverPlot = quiver(axPosition,50,50,1,0);
 for i = 1:eyes
     quiverSidePlot(i) = quiver(axPosition, 0,0,0,0);

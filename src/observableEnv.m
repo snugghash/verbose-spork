@@ -5,12 +5,8 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 
 global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
-turnRate = 45;
-visibility = 5*ballRadius; % Arbitally chosen
-angle = 135;
-eyes = 9;
+
 actions = 5;
-GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable.
 
 % Shifting origin of axes.
 % Window of pos(coords) +/- (visibility + ballRadius)
@@ -30,7 +26,8 @@ obsEnvSpace = obsEnvSpace( (relativeDistance<(visibility + ballRadius)), : );
 obsEnvSpace = [obsEnvSpace(:,1)+pos(1) obsEnvSpace(:,2)+pos(2) obsEnvSpace(:,3) obsEnvSpace(:,4)];
 
 % Field of View
-dirVecAngle = atand(dirVec(2)/dirVec(1));
+% [Now the quiver will function properly]-atan2d
+dirVecAngle = atan2d(dirVec(2),dirVec(1));
 for i = 1:eyes
     obsDirs(i) = dirVecAngle - ((eyes+1)/2 - i)*(angle/eyes);
 end
@@ -44,30 +41,69 @@ relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToT
 obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(obsDirs(end)-thetaRotation)), :);
 
 
+% Defining walls [L; T; R; B]
+x0 = fullEnv(1,1);
+y0 = fullEnv(1,2);
+ei = fullEnv(1,3);
+ej = fullEnv(1,4);
+wallVector = [0 1;1 0; 0 1; 1 0];
+perpenDistance = [fullEnv(1,1); gridSize-fullEnv(1,2); gridSize - fullEnv(1,1); fullEnv(1,1);];
 
-% Observing and assigning any blob and distance to it data
-obsEnv = GAMMA.*ones(eyes,numThings); %TODO hardcoded
+% DistanceToWallAlongSensor = perpenDistance * (csc(acos(abs(sind(obsDirs*1)))));
+DistanceToWallAlongSensor = [ perpenDistance(1)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(2)*(csc(acos(abs(cosd(obsDirs*1)))));  perpenDistance(3)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(4)*(csc(acos(abs(cosd(obsDirs*1)))));];
+
+% pointsOfIntersectionwithWalls = [0 y0-x0*tand(obsDirs); ...
+%     x0+(gridSize-y0)*cotd(obsDirs) gridSize;...
+%     gridSize y0+tand(obsDirs)*(gridSize-x0); ...
+%     x0-y0*cotd(obsDirs) 0];
+dots = [(-x0*tand(obsDirs))*ej-x0*ei; ((gridSize-y0)*cotd(obsDirs))*ei+ej*(gridSize-y0); (gridSize-x0)*ei+(tand(obsDirs)*(gridSize-x0))*ej; (-y0*cotd(obsDirs))*ei+(-y0)*ej];
+dots = (sign(dots)+1)/2;
+% DistanceToWallAlongSensor in the field of view. Basically marking the
+% wrong distances by Inf as dividing it by 0 in dots.
+DistanceToWallAlongSensor = DistanceToWallAlongSensor ./ dots;
+
+% Observing and assigning any blob and distance to it data. One extra copy
+% is created in case it becomes null.
+obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
+% obsEnvNew = GAMMA.*ones(size(obsEnvSpace,1)+1, eyes+1);
+% obsEnvNew(1,2:end) = wallDistanceofAllEyes;
+% Assigning type of the blob
+% obsEnvNew(:,1) = [1; obsEnvSpace(:,3)];
+
+% distance to the two required walls along the sensor
+distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
+% min distance to any wall.
+distance = min(distance);
+
 for line = 1:eyes
     % Check for intersection with WALL, (boundary a.t.m)
     % Perpendicular distance
-    perpenDistanceX2 = gridSize - fullEnv(1,1);
+    % %     perpenDistanceX2 = gridSize - fullEnv(1,1);
     % Distance along direction vector
     % Corrected distances - (Remove later)
     % Changed: [cos(a) sin(a)][1;0] for top wall, similarly for the
     % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
     % the middle sensor
-    DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-    perpenDistanceY2 = gridSize - fullEnv(1,2);
-    DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
-    if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
-        if(DistanceToTopWallAlongSensor<visibility) 
-            obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
-        end
-    else
-        if(DistanceToRightWallAlongSensor<visibility) 
-            obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
-        end
+    % %     DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
+    % %     perpenDistanceY2 = gridSize - fullEnv(1,2);
+    % %     DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
+    %     distance = DistanceToWallAlongSensor( (DistanceToWallAlongSensor(:,line)<Inf),line );
+    
+    % Assigning the min distance if within visibility
+    if(distance<visibility)
+        obsEnv(line, WALL,:) = distance;
     end
+    
+    
+% % %     if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
+% % %         if(DistanceToTopWallAlongSensor<visibility) 
+% % %             obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
+% % %         end
+% % %     else
+% % %         if(DistanceToRightWallAlongSensor<visibility) 
+% % %             obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
+% % %         end
+% % %     end
     % Number of consumables
     for i=1:size(obsEnvSpace,1)
         % Check for intersection with circle of consumables
@@ -79,18 +115,19 @@ for line = 1:eyes
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if temp(1)<=temp(2) % temp(1) is not necessarily smallest
                 if temp(1)<=visibility
-                    if(obsEnv(line, obsEnvSpace(i,3)) > temp(1))
-                        obsEnv(line, obsEnvSpace(i,3)) = temp(1);
-                    end
+
+                    obsEnv(line, obsEnvSpace(i,3),i) = temp(1);
+%                     obsEnvNew(1+i,line) = temp(1);
                 end
             elseif temp(2) <= visibility
-                    if(obsEnv(line, obsEnvSpace(i,3)) > temp(2))
-                        obsEnv(line, obsEnvSpace(i,3)) = temp(2);
-                    end
+                obsEnv(line, obsEnvSpace(i,3),i) = temp(2);
+%                 obsEnvNew(1+i,line) = temp(2);
+
             end
-        else
-            % No intersection
-            obsEnv(line, obsEnvSpace(i,3)) = GAMMA;
+%             This option is by default.
+% % % %         else
+% % % %             % No intersection
+% % % %             obsEnv(line, obsEnvSpace(i,3)) = GAMMA;
         end
     end
 end
@@ -98,7 +135,7 @@ end
 % Five actions that can be taken - middle 5
 actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
-% TODO: Defining the obs environment
+% TODO: Defining the obs environment here
 if(sideWings == 1)
     for i=1:eyes
         u = visibility * cosd(obsDirs(i));
@@ -112,3 +149,5 @@ end
 end
 
 % TODO: Feel that its not setting the sector as the observable environment
+% [Resolved]
+

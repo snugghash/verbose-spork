@@ -5,18 +5,9 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 global numThings vec ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes blobsEaten;
 
 % Generate Grid % Grid size defined in main.m
-gridSize = 100;
-WALL = 1;
-GOOD = 2;
-BAD = 3;
 negR = -2;
 plusR = 1;
-ballRadius = 5;
-objectRadius = 5;
-numThings = 3; 
-amountOfConsumables = 30;
-visibility = 5*ballRadius;
-eyes = 9;
+
 
 reward = 0;
 if prevEnvState == 0
@@ -26,7 +17,10 @@ if prevEnvState == 0
     coords(1:amountOfConsumables/2,3) = GOOD;
     coords(amountOfConsumables/2+1:end,4) = negR;
     coords(1:amountOfConsumables/2,4) = plusR;
-    positionPlot = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+', coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
+    % Good and Bad should have diiferent plot handles, easier for setting
+    % new consumables 1-Good and 2-Bad
+    positionPlot(1) = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+');
+    positionPlot(2) = plot(axPosition,coords(amountOfConsumables/2+1:end,1),coords(amountOfConsumables/2+1:end,2),'r+');
     agentPosition = [round(gridSize/2) round(gridSize/2)];
     agentDirection = vec;
     
@@ -48,9 +42,10 @@ if prevEnvState == 0
     
     return;
 else
-    % TODO: Should we use this instead of set()? Will it increase the
-    % performance?
-    positionPlot = plot(axPosition,prevEnvState(2:amountOfConsumables/2+1,1),prevEnvState(2:amountOfConsumables/2+1,2),'g+', prevEnvState(amountOfConsumables/2+2:end,1),prevEnvState(amountOfConsumables/2+2:end,2),'r+');
+    % Used 'set'. TODO: Test (Ensure hold is on)
+    set(positionPlot(1), 'XData', prevEnvState(2:amountOfConsumables/2+1,1), 'YData', prevEnvState(2:amountOfConsumables/2+1,2),'MarkerEdgeColor', 'g');
+    set(positionPlot(2), 'XData', prevEnvState(amountOfConsumables/2+2:end,1), 'YData', prevEnvState(amountOfConsumables/2+2:end,2),'MarkerEdgeColor', 'r');
+    
 end
 
 % Update the state from last action
@@ -71,6 +66,8 @@ currentEnvState = EnvState;
 
 % Update the plot of agent and environment to reflect current position
 set(positionAgent, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),'MarkerEdgeColor', 'b');
+
+% Remove later, is getting calculated/plotted twice
 u = visibility * currentEnvState(1,3);
 v = visibility * currentEnvState(1,4);
 set(quiverPlot, 'XData', currentEnvState(1,1),...
