@@ -8,7 +8,6 @@ if dbg
     end
 end
 
-a = 1;
 global  sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
@@ -28,6 +27,7 @@ quiverPlot = quiver(axPosition,50,50,1,0);
 for i = 1:eyes
     quiverSidePlot(i) = quiver(axPosition, 0,0,0,0);
 end
+rewardPlot = plot(axReward, nan, 'g');
 avgRewardPlot = plot(axReward, nan, 'b*');
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
@@ -52,14 +52,13 @@ steps = 0;
 if dbg == 1 
     display('In main: before while');
 end
-j=0;
+j=0;counter =0;
 while steps<=max_steps
     if dbg == 1 
         display(['Steps(Age): ' num2str(steps)]);
         display(['Action taken last step: ' num2str(action)]);
         display(obsEnv);
     end
-%     axes(axPosition);
     avgReward = 0;
     for i=1:frame
         obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
@@ -71,6 +70,8 @@ while steps<=max_steps
             display(obsEnv);
             display(reward);
         end
+        counter = counter + 1;
+        R(counter) = reward;
     end
     avgReward = avgReward/frame;
     % To display all the previous points in the plot.
@@ -78,6 +79,7 @@ while steps<=max_steps
     temp1(j) = round(steps/frame);
     temp2(j) = avgReward;
     set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
+    set(rewardPlot, 'XData', 1/frame:1/frame:counter/frame, 'YData', R, 'LineStyle', '-', 'Color','g');
     hold on
     drawnow
 end

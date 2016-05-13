@@ -61,7 +61,7 @@ if(closestGoodDirection == 0 || blobsEaten<1)
         action = 2; 
         turningActions = turningActions -1;
 
-    elseif(obsState(round(eyes/2),WALL)<5) %TODO HARDCODED Distance to start turning.
+    elseif(stateClosest(round(eyes/2),WALL)<5) %TODO HARDCODED Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end
@@ -86,7 +86,7 @@ end
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
     if any(stateClosest(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + actionValueApprox(theta,stateClosest,action) - actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));
