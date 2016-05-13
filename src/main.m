@@ -1,14 +1,14 @@
-global dbg
+global dbg wipeOut
 dbg = str2num(input('Do you want to debug = ','s'));
 if dbg
     wipeOut = str2num(input('Do you want to start afresh = ','s'));
     if(wipeOut)
         close all % To close the figures
-        clear all %TODO remove if coming from previous theta. Add to options, like debug.
-        dbg = 1;
+        clearvars -except dbg wipeOut %TODO remove if coming from previous theta. Add to options, like debug.
     end
 end
 
+a = 1;
 global  sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
