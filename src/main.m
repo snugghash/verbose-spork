@@ -1,18 +1,12 @@
-global dbg wipeOut
-dbg = str2num(input('Do you want to debug = ','s'));
+init;
 if dbg
-    wipeOut = str2num(input('Do you want to start afresh = ','s'));
-    if(wipeOut)
+    if wipeOut
         close all % To close the figures
         clearvars -except dbg wipeOut %TODO remove if coming from previous theta. Add to options, like debug.
     end
 end
 
 global  sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
-
-moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
-sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
-init;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -34,8 +28,6 @@ Y = get(avgRewardPlot, 'YData');
 
 % Initialize the bot's position in the space
 pos = [round(gridSize/2) round(gridSize/2)];
-vec = [1 0]; % Changed from [0 1] to be coherent (inherent direction)
-vec = vec / norm(vec);
 
 % Generate Environment
 EnvState = 0;

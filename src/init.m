@@ -55,3 +55,22 @@ end
 if isempty(blobsEaten)
     blobsEaten = 0;
 end
+
+% Used to be interactive
+global dbg
+if isempty(dbg)
+    dbg = 0;
+end
+global wipeOut
+if isempty(wipeOut)
+    wipeOut = 1;
+end
+global moveSlow
+if isempty(moveSlow)
+    moveSlow = 0;
+end
+global sideWings
+if isempty(sideWings)
+    sideWings = 0;
+end
+
