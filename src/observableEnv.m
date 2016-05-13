@@ -8,12 +8,9 @@ global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumabl
 
 actions = 5;
 
-% Shifting origin of axes.
-% Window of pos(coords) +/- (visibility + ballRadius)
 relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) fullEnv(2:end,4)];
 
 % Relative position of things inside visible range, discarding outside.
-% SelfNote : find is not required here! (as the arg is logical)
 obsEnvSpace = relativePos(  (sum(abs(relativePos(:,1:2))<(visibility + ballRadius),2) == 2), :  );
 % relativeDistance will yield exact result : Radial Distance 
 % Agario uses a box hence use obsEnvSpace in future
@@ -26,7 +23,6 @@ obsEnvSpace = obsEnvSpace( (relativeDistance<(visibility + ballRadius)), : );
 obsEnvSpace = [obsEnvSpace(:,1)+pos(1) obsEnvSpace(:,2)+pos(2) obsEnvSpace(:,3) obsEnvSpace(:,4)];
 
 % Field of View
-% [Now the quiver will function properly]-atan2d
 dirVecAngle = atan2d(dirVec(2),dirVec(1));
 for i = 1:eyes
     obsDirs(i) = dirVecAngle - ((eyes+1)/2 - i)*(angle/eyes);
@@ -52,10 +48,6 @@ perpenDistance = [fullEnv(1,1); gridSize-fullEnv(1,2); gridSize - fullEnv(1,1); 
 % DistanceToWallAlongSensor = perpenDistance * (csc(acos(abs(sind(obsDirs*1)))));
 DistanceToWallAlongSensor = [ perpenDistance(1)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(2)*(csc(acos(abs(cosd(obsDirs*1)))));  perpenDistance(3)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(4)*(csc(acos(abs(cosd(obsDirs*1)))));];
 
-% pointsOfIntersectionwithWalls = [0 y0-x0*tand(obsDirs); ...
-%     x0+(gridSize-y0)*cotd(obsDirs) gridSize;...
-%     gridSize y0+tand(obsDirs)*(gridSize-x0); ...
-%     x0-y0*cotd(obsDirs) 0];
 dots = [(-x0*tand(obsDirs))*ej-x0*ei; ((gridSize-y0)*cotd(obsDirs))*ei+ej*(gridSize-y0); (gridSize-x0)*ei+(tand(obsDirs)*(gridSize-x0))*ej; (-y0*cotd(obsDirs))*ei+(-y0)*ej];
 dots = (sign(dots)+1)/2;
 % DistanceToWallAlongSensor in the field of view. Basically marking the
@@ -65,10 +57,6 @@ DistanceToWallAlongSensor = DistanceToWallAlongSensor ./ dots;
 % Observing and assigning any blob and distance to it data. One extra copy
 % is created in case it becomes null.
 obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
-% obsEnvNew = GAMMA.*ones(size(obsEnvSpace,1)+1, eyes+1);
-% obsEnvNew(1,2:end) = wallDistanceofAllEyes;
-% Assigning type of the blob
-% obsEnvNew(:,1) = [1; obsEnvSpace(:,3)];
 
 % distance to the two required walls along the sensor
 distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
@@ -76,58 +64,24 @@ distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
 distance = min(distance);
 
 for line = 1:eyes
-    % Check for intersection with WALL, (boundary a.t.m)
-    % Perpendicular distance
-    % %     perpenDistanceX2 = gridSize - fullEnv(1,1);
-    % Distance along direction vector
-    % Corrected distances - (Remove later)
-    % Changed: [cos(a) sin(a)][1;0] for top wall, similarly for the
-    % right wall => [cos(a) sin(a)] = [fullEnv(1,3) fullEnv(1,4)] for
-    % the middle sensor
-    % %     DistanceToRightWallAlongSensor = perpenDistanceX2/(sin(acos(abs(sind(obsDirs(line))*1))));
-    % %     perpenDistanceY2 = gridSize - fullEnv(1,2);
-    % %     DistanceToTopWallAlongSensor = perpenDistanceY2/(sin(acos(abs(cosd(obsDirs(line))*1))));
-    %     distance = DistanceToWallAlongSensor( (DistanceToWallAlongSensor(:,line)<Inf),line );
-    
     % Assigning the min distance if within visibility
     if(distance<visibility)
         obsEnv(line, WALL,:) = distance;
     end
-    
-    
-% % %     if(DistanceToTopWallAlongSensor<DistanceToRightWallAlongSensor)
-% % %         if(DistanceToTopWallAlongSensor<visibility) 
-% % %             obsEnv(line, WALL) = DistanceToTopWallAlongSensor;
-% % %         end
-% % %     else
-% % %         if(DistanceToRightWallAlongSensor<visibility) 
-% % %             obsEnv(line, WALL) = DistanceToRightWallAlongSensor;
-% % %         end
-% % %     end
     % Number of consumables
     for i=1:size(obsEnvSpace,1)
         % Check for intersection with circle of consumables
         [xout,yout] = linecirc(tand(obsDirs(line)),0,obsEnvSpace(i,1)-pos(1),...
-        obsEnvSpace(i,2)-pos(2),ballRadius); 
+            obsEnvSpace(i,2)-pos(2),ballRadius);
         if ~isnan(xout)
             % Intersection detected
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
-            if temp(1)<=temp(2) % temp(1) is not necessarily smallest
-                if temp(1)<=visibility
-
-                    obsEnv(line, obsEnvSpace(i,3),i) = temp(1);
-%                     obsEnvNew(1+i,line) = temp(1);
-                end
-            elseif temp(2) <= visibility
-                obsEnv(line, obsEnvSpace(i,3),i) = temp(2);
-%                 obsEnvNew(1+i,line) = temp(2);
-
+            if min(temp)<=visibility
+                
+                obsEnv(line, obsEnvSpace(i,3),i) = min(temp);
+                % obsEnvNew(1+i,line) = temp(1);
             end
-%             This option is by default.
-% % % %         else
-% % % %             % No intersection
-% % % %             obsEnv(line, obsEnvSpace(i,3)) = GAMMA;
         end
     end
 end
@@ -147,7 +101,3 @@ if(sideWings == 1)
 end
 
 end
-
-% TODO: Feel that its not setting the sector as the observable environment
-% [Resolved]
-
