@@ -5,8 +5,8 @@ function [ currentEnvState, reward ] = EnvironmentModel( prevEnvState, action )
 global numThings vec ballRadius objectRadius amountOfConsumables GOOD BAD WALL positionPlot positionAgent quiverPlot quiverSidePlot gridSize visibility axPosition moveSlow eyes blobsEaten;
 
 % Generate Grid % Grid size defined in main.m
-negR = -2;
-plusR = 1;
+badReward = -2;
+goodReward = 1;
 
 
 reward = 0;
@@ -15,8 +15,8 @@ if prevEnvState == 0
     coords = randi(gridSize, amountOfConsumables,2);
     coords(amountOfConsumables/2+1:end,3) = BAD;
     coords(1:amountOfConsumables/2,3) = GOOD;
-    coords(amountOfConsumables/2+1:end,4) = negR;
-    coords(1:amountOfConsumables/2,4) = plusR;
+    coords(amountOfConsumables/2+1:end,4) = badReward;
+    coords(1:amountOfConsumables/2,4) = goodReward;
     % Good and Bad should have diiferent plot handles, easier for setting
     % new consumables 1-Good and 2-Bad
     positionPlot(1) = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+');

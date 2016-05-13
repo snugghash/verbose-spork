@@ -1,29 +1,57 @@
-function [  ] = init( )
 %UNTITLED3 Summary of this function goes here
 %   TODO: Initialize all the global variables agent/environment parameters
 %   here
-global vec
-global numThings GAMMA turnRate angle ballRadius objectRadius amountOfConsumables GOOD BAD WALL gridSize visibility eyes ;
+global vec numThings GAMMA turnRate angle ballRadius objectRadius amountOfConsumables GOOD BAD WALL gridSize visibility eyes reward blobsEaten;
 
 % Main
-vec = [1 0];
-
+if isempty(vec)
+    vec = [1 0];
+end
 % Environment Model
-gridSize = 100;
-WALL = 1;
-GOOD = 2;
-BAD = 3;
-ballRadius = 5;
-objectRadius = 5;
-numThings = 3; 
-amountOfConsumables = 30;
-visibility = 5*ballRadius;
-eyes = 9;
-
-% Observable Model
-turnRate = 45;
-angle = 135;
-GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable.
-
+if isempty(gridSize)
+    gridSize = 100;
+end
+if isempty(WALL)
+    WALL = 1;
+end
+if isempty(GOOD)
+    GOOD = 2;
+end
+if isempty(BAD)
+    BAD = 3;
+end
+if isempty(ballRadius)
+    ballRadius = 5;
+end
+if isempty(objectRadius)
+    objectRadius = 5;
+end
+if isempty(numThings)
+    numThings = 3; 
+end
+if isempty(amountOfConsumables)
+    amountOfConsumables = 30;
+end
+if isempty(visibility)
+    visibility = 5*ballRadius;
+end
+if isempty(eyes)
+    eyes = 9;
 end
 
+% Observable Model
+if isempty(turnRate)
+    turnRate = 45;
+end
+if isempty(angle)
+    angle = 135;
+end
+if isempty(GAMMA)
+    GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable NaNs.
+end
+if isempty(reward)
+    rreward = 0;
+end
+if isempty(blobsEaten)
+    blobsEaten = 0;
+end

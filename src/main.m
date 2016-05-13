@@ -4,11 +4,7 @@ global dbg sideWings vec moveSlow gridSize axPosition axReward positionPlot quiv
 dbg = str2num(input('Do you want to debug = ','s'));
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
 sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
-init();
-eyes = 9;
-reward = 0;
-blobsEaten = 0;
-gridSize = 100;
+init;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
