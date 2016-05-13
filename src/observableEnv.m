@@ -34,38 +34,43 @@ thetaRotation = atan2d(dirVec(2), dirVec(1));
 rotationMatrix = [cosd(thetaRotation) -sind(thetaRotation); sind(thetaRotation) cosd(thetaRotation)];
 rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix; 
 relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
-obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(obsDirs(end)-thetaRotation)), :);
+obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(((eyes+1)/2 - 1)*(angle/eyes))), :); % Minor bug fixed.
 
 
-% Defining walls [L; T; R; B]
-x0 = fullEnv(1,1);
-y0 = fullEnv(1,2);
-ei = fullEnv(1,3);
-ej = fullEnv(1,4);
-wallVector = [0 1;1 0; 0 1; 1 0];
-perpenDistance = [fullEnv(1,1); gridSize-fullEnv(1,2); gridSize - fullEnv(1,1); fullEnv(1,1);];
-
-% DistanceToWallAlongSensor = perpenDistance * (csc(acos(abs(sind(obsDirs*1)))));
-DistanceToWallAlongSensor = [ perpenDistance(1)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(2)*(csc(acos(abs(cosd(obsDirs*1)))));  perpenDistance(3)*csc(acos(abs(sind(obsDirs*1)))); perpenDistance(4)*(csc(acos(abs(cosd(obsDirs*1)))));];
-
-dots = [(-x0*tand(obsDirs))*ej-x0*ei; ((gridSize-y0)*cotd(obsDirs))*ei+ej*(gridSize-y0); (gridSize-x0)*ei+(tand(obsDirs)*(gridSize-x0))*ej; (-y0*cotd(obsDirs))*ei+(-y0)*ej];
-dots = (sign(dots)+1)/2;
-% DistanceToWallAlongSensor in the field of view. Basically marking the
-% wrong distances by Inf as dividing it by 0 in dots.
-DistanceToWallAlongSensor = DistanceToWallAlongSensor ./ dots;
+% New definition for wall detection [foolproof]
+xlimit = [0 gridSize];
+ylimit = [0  gridSize];
+xbox = xlimit([1 1 2 2 1]);
+ybox = ylimit([1 2 2 1 1]);
+% mapshow(xbox,ybox,'DisplayType','polygon','LineStyle','none')
+wingDirVec = [cosd(obsDirs') sind(obsDirs')];
+for line = 1:eyes
+    pos1(line,:) = pos + wingDirVec(line,:) * visibility;
+    
+    % Define and display a two-part polyline
+    x = [pos(1) pos1(line,1)'];
+    y = [pos(2) pos1(line,2)'];
+%     mapshow(x,y,'Marker','+')
+    
+    % Intersect the polyline with the rectangle
+    [xi, yi] = polyxpoly(x, y, xbox, ybox);
+%     mapshow(xi,yi,'DisplayType','point','Marker','o')
+    
+    % Distance to the wall along the sensor
+    if ~isempty(xi)    
+        distance(line) = norm( [xi-pos(1) yi-pos(2)] ,2);
+    else
+        distance(line) = GAMMA;
+    end
+end
 
 % Observing and assigning any blob and distance to it data. One extra copy
 % is created in case it becomes null.
 obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
 
-% distance to the two required walls along the sensor
-distance = DistanceToWallAlongSensor .* (DistanceToWallAlongSensor<Inf) ;
-% min distance to any wall.
-distance = min(distance);
-
 for line = 1:eyes
     % Assigning the min distance if within visibility
-    if(distance<visibility)
+    if(distance(line)<visibility)
         obsEnv(line, WALL,:) = distance(line);
     end
     % Number of consumables
