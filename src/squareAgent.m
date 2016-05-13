@@ -47,7 +47,7 @@ for i=1:eyes
     
 end
 % If nothing good found,
-if(closestGoodDirection == 0 )% || blobsEaten<1)
+if(closestGoodDirection == 0 || blobsEaten<1)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
