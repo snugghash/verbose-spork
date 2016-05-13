@@ -5,5 +5,6 @@ function grad = gradActionValue_wrtTheta(previousState,feature)
         grad = 1/previousState(feature(1), feature(2))^2;
     else
         grad = 1/previousState(feature(1), feature(2));
+    end
         
 end
