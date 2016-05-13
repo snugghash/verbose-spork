@@ -66,7 +66,7 @@ distance = min(distance);
 for line = 1:eyes
     % Assigning the min distance if within visibility
     if(distance<visibility)
-        obsEnv(line, WALL,:) = distance;
+        obsEnv(line, WALL,:) = distance(line);
     end
     % Number of consumables
     for i=1:size(obsEnvSpace,1)
