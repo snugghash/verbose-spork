@@ -1,4 +1,4 @@
-function [ action ] = squareAgent( obsState, lastReward )
+function [ action ] = squareAgent( obsStateBig, lastReward )
 %Qlearning Learning to select options and navigate, one step at a time.
 % Arguments: Observed state, position, reward from last action.
 % Overview: Options: --Explore --Go to fruit --Choose between fruit to go
@@ -31,7 +31,21 @@ end
 % Get distance to closest good thing. [It explores only the closest good thing]
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
+obsState = GAMMA .* ones(eyes,numThings);
+for i=1:eyes
+    [minGood, ind] = min(obsStateBig(i,GOOD,:));
+    obsState(i,GOOD) = minGood;
+    [minBad, ~] = min(obsStateBig(i,BAD,:));
+    obsState(i,BAD) = minBad;
+    obsState(i,WALL) = obsStateBig(i,WALL,1);
 
+    if (minGood < closestGoodDistance)
+        % TODO: this code can be optimized
+        closestGoodDistance = obsStateBig(i,GOOD,ind);
+        closestGoodDirection = i;
+    end
+
+end
 % If nothing good found,
 if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
     % Explore (TODO Go to last known good thing)

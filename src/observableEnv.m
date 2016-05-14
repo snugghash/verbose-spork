@@ -1,4 +1,4 @@
-function [ obsState, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
+function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %UNTITLED2 Summary of this function goes here
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
@@ -102,16 +102,6 @@ if(sideWings == 1)
         'YData',fullEnv(1,2),...
         'UData', u, 'VData', v);
     end
-end
-
-obsStateBig = obsEnv;
-obsState = GAMMA .* ones(eyes,numThings);
-for i=1:eyes
-    [minGood, ~] = min(obsStateBig(i,GOOD,:));
-    obsState(i,GOOD) = minGood;
-    [minBad, ~] = min(obsStateBig(i,BAD,:));
-    obsState(i,BAD) = minBad;
-    obsState(i,WALL) = obsStateBig(i,WALL,1);
 end
 
 end
