@@ -33,6 +33,15 @@ end
 if isempty(vec)
     vec = [1 0];
 end
+global max_steps
+if isempty(max_steps)
+    max_steps = 10000;
+end
+global frame
+if isempty(frame)
+    frame = 100; % We display averages over this frame
+end
+
 % Environment Model
 if isempty(gridSize)
     gridSize = 100;
@@ -85,5 +94,7 @@ global blobsEaten
 if isempty(blobsEaten)
     blobsEaten = 0;
 end
-
-
+global onlyExplore
+if isempty(onlyExplore)
+  onlyExplore = 0;
+end
