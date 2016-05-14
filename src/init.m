@@ -50,7 +50,7 @@ if isempty(GAMMA)
     GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable NaNs.
 end
 if isempty(reward)
-    rreward = 0;
+    reward = 0;
 end
 if isempty(blobsEaten)
     blobsEaten = 0;
