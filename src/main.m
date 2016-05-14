@@ -36,7 +36,8 @@ steps = 0;
 if dbg == 1
     display('In main: before while');
 end
-j=0;counter =0;
+j = 0;
+counter = 0;
 while steps<=max_steps
     if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);

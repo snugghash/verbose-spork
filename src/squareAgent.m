@@ -31,21 +31,7 @@ end
 % Get distance to closest good thing. [It explores only the closest good thing]
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
-stateClosest = GAMMA .* ones(eyes,numThings);
-for i=1:eyes
-    [minGood, ind] = min(obsState(i,GOOD,:));
-    stateClosest(i,GOOD) = minGood;
-    [minBad, ~] = min(obsState(i,BAD,:));
-    stateClosest(i,BAD) = minBad;
-    stateClosest(i,WALL) = obsState(i,WALL,1);
 
-    if (minGood < closestGoodDistance)
-        % TODO: this code can be optimized
-        closestGoodDistance = obsState(i,GOOD,ind);
-        closestGoodDirection = i;
-    end
-
-end
 % If nothing good found,
 if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
     % Explore (TODO Go to last known good thing)
@@ -61,7 +47,7 @@ if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
         action = 2;
         turningActions = turningActions -1;
 
-    elseif(stateClosest(round(eyes/2),WALL)<5) %TODO HARDCODED Distance to start turning.
+    elseif(obsState(round(eyes/2),WALL)<5) %TODO HARDCODED Distance to start turning.
         if(dbg)
             display('Exploring, starting turn.')
         end
@@ -79,14 +65,14 @@ else
         display('Exploiting')
     end
     % Collect good thing
-    action = getGreedyAction(stateClosest, theta);
+    action = getGreedyAction(obsState, theta);
 end
 
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
-    if any(stateClosest(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,stateClosest,action) - actionValueApprox(theta,previousState,previousAction);
+    if any(obsState(:) ~= previousState(:))
+        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));
@@ -95,8 +81,7 @@ if(isempty(previousState)==0)
     end
 end
 
-%% TODO: @Suhas Please check the correctness of this change
-previousState = stateClosest;
+previousState = obsState;
 previousAction = action;
 
 end
