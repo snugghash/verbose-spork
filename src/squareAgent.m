@@ -66,7 +66,7 @@ if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
             display('Exploring, starting turn.')
         end
         % Randomly choose an angle to turn between turnRate and 180-turnRate
-        turningActions = randi(180/turnRate-1); %Adopted Suhas's change
+        turningActions = randi(180/turnRate-2); % One turningAction used up now.
         action = 2;
     else
         if(dbg)
