@@ -70,9 +70,8 @@ obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
 
 for line = 1:eyes
     % Assigning the min distance if within visibility
-    if(distance(line)<visibility)
-        obsEnv(line, WALL,:) = distance(line);
-    end
+    obsEnv(line, WALL,:) = distance(line);
+    
     % Number of consumables
     for i=1:size(obsEnvSpace,1)
         % Check for intersection with circle of consumables
