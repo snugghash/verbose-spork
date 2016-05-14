@@ -1,7 +1,33 @@
-%UNTITLED3 Summary of this function goes here
+% Initializes the parameters, options and other required variables which have a *single*(or most used) default value each.
 %   TODO: Initialize all the global variables agent/environment parameters
 %   here
-global vec numThings GAMMA turnRate angle ballRadius objectRadius amountOfConsumables GOOD BAD WALL gridSize visibility eyes reward blobsEaten;
+
+% Used to be interactive
+%if exist('wipeOut')
+    %clearvars -except dbg wipeOut %TODO remove if coming from previous theta. Add to options, like debug.
+    % Doesn't clear globals, hence
+%    clear all
+%end
+global dbg
+if isempty(dbg)
+    dbg = 0;
+end
+global moveSlow
+if isempty(moveSlow)
+    moveSlow = 0;
+end
+global sideWings
+if isempty(sideWings)
+    sideWings = 0;
+end
+
+global vec numThings GAMMA turnRate angle ballRadius objectRadius amountOfConsumables GOOD BAD WALL gridSize visibility eyes;
+
+% Plots
+if exist('dontcloseall')
+else
+    close all % To close figures
+end
 
 % Main
 if isempty(vec)
@@ -27,7 +53,7 @@ if isempty(objectRadius)
     objectRadius = 5;
 end
 if isempty(numThings)
-    numThings = 3; 
+    numThings = 3;
 end
 if isempty(amountOfConsumables)
     amountOfConsumables = 30;
@@ -49,28 +75,15 @@ end
 if isempty(GAMMA)
     GAMMA = 10000; % Large value instead of Inf. Inf resolves to uncomparable NaNs.
 end
+
+% Agent space
+global reward
 if isempty(reward)
     reward = 0;
 end
+global blobsEaten
 if isempty(blobsEaten)
     blobsEaten = 0;
 end
 
-% Used to be interactive
-global dbg
-if isempty(dbg)
-    dbg = 0;
-end
-global wipeOut
-if isempty(wipeOut)
-    wipeOut = 1;
-end
-global moveSlow
-if isempty(moveSlow)
-    moveSlow = 0;
-end
-global sideWings
-if isempty(sideWings)
-    sideWings = 0;
-end
 
