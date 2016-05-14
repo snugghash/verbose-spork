@@ -1,13 +1,6 @@
-init;
-if dbg
-    if wipeOut
-        close all % To close the figures
-        clearvars -except dbg wipeOut %TODO remove if coming from previous theta. Add to options, like debug.
-    end
-end
-% init;
+initVariables;
 
-global  sideWings theta vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
+global sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -38,16 +31,14 @@ EnvState = 0;
 obsEnv = observableEnv(EnvState, pos, vec);
 action = squareAgent(obsEnv, 0);
 
-max_steps = 10000;
-frame = 100; % We display averages over this frame
 steps = 0;
 
-if dbg == 1 
+if dbg == 1
     display('In main: before while');
 end
 j=0;counter =1;
 while steps<=max_steps
-    if dbg == 1 
+    if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);
         display(['Action taken last step: ' num2str(action)]);
         display(obsEnv);
@@ -55,9 +46,9 @@ while steps<=max_steps
     avgReward = 0;
     R(counter) = 0;
     for i=1:frame
+        [EnvState, reward] = EnvironmentModel(EnvState, action);
         obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
         action = squareAgent(obsEnv, reward);
-        [EnvState, reward] = EnvironmentModel(EnvState, action);
         avgReward = avgReward+reward;
         steps = steps+1;
         if moveSlow && dbg
