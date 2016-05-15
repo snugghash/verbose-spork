@@ -5,21 +5,21 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv )
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 pos = fullEnv(1,[1 2]);
 dirVec = fullEnv(1,[3 4]);
-global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
+global visibility angle eyes WALL GOOD BAD objectRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
 
 actions = 5;
 
 relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) fullEnv(2:end,4)];
 
 % Relative position of things inside visible range, discarding outside.
-obsEnvSpace = relativePos(  (sum(abs(relativePos(:,1:2))<(visibility + ballRadius),2) == 2), :  );
+obsEnvSpace = relativePos(  (sum(abs(relativePos(:,1:2))<(visibility + objectRadius),2) == 2), :  );
 % relativeDistance will yield exact result : Radial Distance
 % Agario uses a box hence use obsEnvSpace in future
 % [New] Here we are having radial check for the relative distance
 relativePosObs = [obsEnvSpace(:,1) obsEnvSpace(:,2)];
 relativeDistance = sqrt(relativePosObs(:,1).^2 + relativePosObs(:,2).^2);
 % These are the actual things that is seen by the agent. [In a radial sense equal in all directions]
-obsEnvSpace = obsEnvSpace( (relativeDistance<(visibility + ballRadius)), : );
+obsEnvSpace = obsEnvSpace( (relativeDistance<(visibility + objectRadius)), : );
 % Reconditioning the obsEnvSpace in the absolute coordinates
 obsEnvSpace = [obsEnvSpace(:,1)+pos(1) obsEnvSpace(:,2)+pos(2) obsEnvSpace(:,3) obsEnvSpace(:,4)];
 
@@ -77,7 +77,7 @@ for line = 1:eyes
     for i=1:size(obsEnvSpace,1)
         % Check for intersection with circle of consumables
         [xout,yout] = linecirc(tand(obsDirs(line)),0,obsEnvSpace(i,1)-pos(1),...
-            obsEnvSpace(i,2)-pos(2),ballRadius);
+            obsEnvSpace(i,2)-pos(2),objectRadius);
         if ~isnan(xout)
             % Intersection detected
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
