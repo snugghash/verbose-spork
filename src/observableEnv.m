@@ -1,9 +1,10 @@
-function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
+function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv )
 %UNTITLED2 Summary of this function goes here
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
-
+pos = fullEnv(1,[1 2]);
+dirVec = fullEnv(1,[3 4]);
 global visibility angle eyes WALL GOOD BAD ballRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
 
 actions = 5;

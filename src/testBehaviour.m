@@ -1,8 +1,14 @@
 %Random behaviour tests to check learned policy's fitness in solving problem.
 
 %% GOOD thing, straight ahead.
-vec = [1 0]
-EnvState = []
+clear all
+amountOfConsumables = 2;
+initVariables;
+global coords
+coords = [60 50 GOOD 2; 10 50 BAD -1];
+dbg = 1;
+moveSlow = 1;
+main
 
 %% GOOD thing, to the left.
 
@@ -14,7 +20,7 @@ EnvState = []
 
 %% BAD thing, to the right.
 
-%% GOOD___BAD 
+%% GOOD___BAD
 
 %% BAD___GOOD
 
