@@ -14,15 +14,15 @@ function [ action ] = squareAgent( obsStateBig, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate disableLearning;
 j=0;
 epsilon = 0.1;
 
 % Check if theta values are in workspace. Initialize otherwise.
-if(isempty(theta))
-    % Each of the possible states have action values
-    theta = zeros(eyes,numThings);
-end
+%if(isempty(theta))
+%    % Each of the possible states have action values
+%    theta = zeros(eyes,numThings);
+%end
 
 %% Selecting next action
 % Exploration-exploitation policy:
@@ -95,7 +95,7 @@ end
 
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
-if(isempty(previousState)==0)
+if(isempty(previousState)==0 && disableLearning==0)
     % New state
     [newObsState, newReward] = summonNewObsStateForUpdating(action);
     if any(obsState(:) ~= newObsState(:))

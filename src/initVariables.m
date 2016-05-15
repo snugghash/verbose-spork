@@ -136,3 +136,11 @@ global sensorOverlap
 if isempty(sensorOverlap)
     sensorOverlap = 5;
 end
+global disableLearning
+if isempty(disableLearning)
+    disableLearning = 0;
+end
+global theta
+if isempty(theta)
+    theta = zeros(eyes,numThings);
+end

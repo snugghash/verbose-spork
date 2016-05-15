@@ -74,3 +74,19 @@ initVariables;
 dbg = 1;
 moveSlow = 0;
 main
+
+%% Given theta
+clear all
+theta = [
+0 0.1 -1;
+0 0.2 -1;
+0 0.3 -1;
+0 0.4 -1;
+0 0.5 -1;
+0 0.4 -1;
+0 0.3 -1;
+0 0.2 -1;
+0 0.1 -1;
+];
+dbg = 1;
+main
