@@ -1,6 +1,6 @@
-initVariables;
+initVariables
 
-global sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
+global sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten avgRewardPlot;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -20,15 +20,9 @@ avgRewardPlot = plot(axReward, nan, 'b*');
 X = get(avgRewardPlot, 'XData');
 Y = get(avgRewardPlot, 'YData');
 
-% Initialize the bot's position in the space
-pos = [round(gridSize/2) round(gridSize/2)];
-
-% Generate Environment
-EnvState = 0;
-[EnvState, ~] = EnvironmentModel(EnvState, 1);
-
 % Start the bot
-obsEnv = observableEnv(EnvState, pos, vec);
+[EnvState, ~] = EnvironmentModel(0, 1);
+obsEnv = observableEnv(EnvState);
 action = squareAgent(obsEnv, 0);
 
 steps = 0;
@@ -48,7 +42,7 @@ while steps<=max_steps
     R(counter) = 0;
     for i=1:frame
         [EnvState, reward] = EnvironmentModel(EnvState, action);
-        obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
+        obsEnv = observableEnv(EnvState);
         action = squareAgent(obsEnv, reward);
         avgReward = avgReward+reward;
         steps = steps+1;
