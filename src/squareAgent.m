@@ -14,9 +14,8 @@ function [ action ] = squareAgent( obsStateBig, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate disableLearning exploreActionsLeft;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate disableLearning exploreActionsLeft epsilon;
 j=0;
-epsilon = 0.1;
 
 % Check if theta values are in workspace. Initialize otherwise.
 %if(isempty(theta))
@@ -44,11 +43,11 @@ for i=1:eyes
     end
 
 end
-if dbg
-    display(obsState);
-end
+%if dbg
+    %display(obsState);
+%end
 % If nothing good found,
-if(blobsEaten<4 || onlyExplore || closestGoodDirection == 0 || turningActions>0 && exploreActionsLeft==0)
+if (blobsEaten<4 || onlyExplore || closestGoodDirection == 0 || turningActions>0) && (exploreActionsLeft<=0)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
@@ -118,10 +117,12 @@ if(isempty(previousState)==0 && disableLearning==0)
         for i_counter=1:length(setOfSensors)
             [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
             theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]);
-            if dbg
-                display(['Grad. action value: ',num2str(gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]))]);
-                display(['Object type: ',num2str(j)]);
-            end
+            %if dbg
+                %display(['Update: ',learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j])])
+                %display(['Delta: ', delta]);
+                %display(['Grad. action value: ',num2str(gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]))]);
+                %display(['Object type: ',num2str(j)]);
+            %end
         end
     end
 end

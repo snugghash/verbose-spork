@@ -148,3 +148,11 @@ global exploreActionsLeft
 if isempty(exploreActionsLeft)
     exploreActionsLeft = 0;
 end
+global epsilon
+if isempty(epsilon)
+    epsilon = 0.1;
+end
+global turningActions
+if isempty(turningActions)
+    turningActions = 0;
+end
