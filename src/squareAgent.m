@@ -1,4 +1,4 @@
-function [ action ] = squareAgent( obsState, lastReward )
+function [ action ] = squareAgent( obsStateBig, lastReward )
 %Qlearning Learning to select options and navigate, one step at a time.
 % Arguments: Observed state, position, reward from last action.
 % Overview: Options: --Explore --Go to fruit --Choose between fruit to go
@@ -14,11 +14,9 @@ function [ action ] = squareAgent( obsState, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions onlyExplore;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate;
 j=0;
 epsilon = 0.1;
-learningRate = 0.3;
-discountFactor = 0.9;
 
 % Check if theta values are in workspace. Initialize otherwise.
 if(isempty(theta))
@@ -31,7 +29,21 @@ end
 % Get distance to closest good thing. [It explores only the closest good thing]
 closestGoodDistance = GAMMA;
 closestGoodDirection = 0;
+obsState = GAMMA .* ones(eyes,numThings);
+for i=1:eyes
+    [minGood, ind] = min(obsStateBig(i,GOOD,:));
+    obsState(i,GOOD) = minGood;
+    [minBad, ~] = min(obsStateBig(i,BAD,:));
+    obsState(i,BAD) = minBad;
+    obsState(i,WALL) = obsStateBig(i,WALL,1);
 
+    if (minGood < closestGoodDistance)
+        % TODO: this code can be optimized
+        closestGoodDistance = obsStateBig(i,GOOD,ind);
+        closestGoodDirection = i;
+    end
+
+end
 % If nothing good found,
 if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
     % Explore (TODO Go to last known good thing)
@@ -72,7 +84,7 @@ end
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
     if any(obsState(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + actionValueApprox(theta,obsState,action) - discountFactor*actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));

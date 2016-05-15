@@ -76,7 +76,7 @@ end
 
 % Observable Model
 if isempty(turnRate)
-    turnRate = 45;
+    turnRate = 15;
 end
 if isempty(angle)
     angle = 135;
@@ -97,4 +97,12 @@ end
 global onlyExplore
 if isempty(onlyExplore)
   onlyExplore = 0;
+end
+global discountFactor
+if isempty(discountFactor)
+    discountFactor = 0.9;
+end
+global learningRate
+if isempty(learningRate)
+    learningRate = 0.3;
 end
