@@ -1,4 +1,4 @@
-function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
+function [ obsState, actionSetForDir ] = observableEnv( fullEnv, pos, dirVec )
 %UNTITLED2 Summary of this function goes here
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
@@ -12,7 +12,7 @@ relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) 
 
 % Relative position of things inside visible range, discarding outside.
 obsEnvSpace = relativePos(  (sum(abs(relativePos(:,1:2))<(visibility + ballRadius),2) == 2), :  );
-% relativeDistance will yield exact result : Radial Distance 
+% relativeDistance will yield exact result : Radial Distance
 % Agario uses a box hence use obsEnvSpace in future
 % [New] Here we are having radial check for the relative distance
 relativePosObs = [obsEnvSpace(:,1) obsEnvSpace(:,2)];
@@ -32,7 +32,7 @@ end
 relativePosObs = [obsEnvSpace(:,1)-pos(1) obsEnvSpace(:,2)-pos(1)];
 thetaRotation = atan2d(dirVec(2), dirVec(1));
 rotationMatrix = [cosd(thetaRotation) -sind(thetaRotation); sind(thetaRotation) cosd(thetaRotation)];
-rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix; 
+rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix;
 relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
 obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(((eyes+1)/2 - 1)*(angle/eyes))), :); % Minor bug fixed.
 
@@ -46,18 +46,18 @@ ybox = ylimit([1 2 2 1 1]);
 wingDirVec = [cosd(obsDirs') sind(obsDirs')];
 for line = 1:eyes
     pos1(line,:) = pos + wingDirVec(line,:) * visibility;
-    
+
     % Define and display a two-part polyline
     x = [pos(1) pos1(line,1)'];
     y = [pos(2) pos1(line,2)'];
 %     mapshow(x,y,'Marker','+')
-    
+
     % Intersect the polyline with the rectangle
     [xi, yi] = polyxpoly(x, y, xbox, ybox);
 %     mapshow(xi,yi,'DisplayType','point','Marker','o')
-    
+
     % Distance to the wall along the sensor
-    if ~isempty(xi)    
+    if ~isempty(xi)
         distance(line) = norm( [xi-pos(1) yi-pos(2)] ,2);
     else
         distance(line) = GAMMA;
@@ -71,7 +71,7 @@ obsEnv = GAMMA.*ones(eyes,numThings,size(obsEnvSpace,1)+1);
 for line = 1:eyes
     % Assigning the min distance if within visibility
     obsEnv(line, WALL,:) = distance(line);
-    
+
     % Number of consumables
     for i=1:size(obsEnvSpace,1)
         % Check for intersection with circle of consumables
@@ -82,7 +82,7 @@ for line = 1:eyes
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if min(temp)<=visibility
-                
+
                 obsEnv(line, obsEnvSpace(i,3),i) = min(temp);
                 % obsEnvNew(1+i,line) = temp(1);
             end
@@ -102,6 +102,16 @@ if(sideWings == 1)
         'YData',fullEnv(1,2),...
         'UData', u, 'VData', v);
     end
+end
+
+obsStateBig = obsEnv;
+obsState = GAMMA .* ones(eyes,numThings);
+for i=1:eyes
+    [minGood, ~] = min(obsStateBig(i,GOOD,:));
+    obsState(i,GOOD) = minGood;
+    [minBad, ~] = min(obsStateBig(i,BAD,:));
+    obsState(i,BAD) = minBad;
+    obsState(i,WALL) = obsStateBig(i,WALL,1);
 end
 
 end
