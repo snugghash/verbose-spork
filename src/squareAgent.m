@@ -73,9 +73,6 @@ if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
         action = 1;
     end
 else
-    if(dbg)
-        display('Epsilon Greedy Exploiting')
-    end
     % Collect good thing - \epsilon-Greedy
     greedyAction = getGreedyAction(obsState, theta);
     j=0;
@@ -94,7 +91,7 @@ else
     else
         action = remActions( randi(actions-1) );
         if(dbg)
-            display('Exploring')
+            display('Exploring epsilon')
         end
     end
 end
@@ -109,8 +106,8 @@ if(isempty(previousState)==0)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));
             theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]);
             if dbg
-                display('Grad. action value',num2str(gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j])));
-                display('Object type',num2str(j));
+                display(['Grad. action value: ',num2str(gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]))]);
+                display(['Object type: ',num2str(j)]);
             end
         end
     end
