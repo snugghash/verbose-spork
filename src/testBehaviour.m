@@ -44,3 +44,15 @@ dbg = 1;
 moveSlow = 1;
 main
 
+%% Second consumable not getting detected 
+clear all
+tolerance = 10^-3;
+amountOfConsumables = 3;
+initVariables;
+global coords
+coords = [60 50 GOOD 1; 70 50 BAD -2; 80 50 BAD -2];
+dbg = 1;
+moveSlow = 1;
+max_steps = 25;
+main
+assert(obsEnv(5,BAD) - 5 <= tolerance);

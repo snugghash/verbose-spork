@@ -48,6 +48,9 @@ while steps<=max_steps
         action = squareAgent(obsEnv, reward);
         avgReward = avgReward+reward;
         steps = steps+1;
+        if steps>=max_steps
+            break;
+        end
         if moveSlow && dbg
             display(obsEnv(:,:,1));
             display(reward);
