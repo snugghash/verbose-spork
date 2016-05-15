@@ -36,7 +36,7 @@ main
 
 %% GOOD___BAD___BAD
 clear all
-amountOfConsumables = 2;
+amountOfConsumables = 3;
 initVariables;
 global coords
 coords = [60 50 GOOD 1; 70 50 BAD -2; 80 50 BAD -2];
