@@ -82,9 +82,7 @@ for line = 1:eyes
             temp(1) = sqrt(xout(1)*xout(1) + yout(1)*yout(1));
             temp(2) = sqrt(xout(2)*xout(2) + yout(2)*yout(2));
             if min(temp)<=visibility
-
                 obsEnv(line, obsEnvSpace(i,3),i) = min(temp);
-                % obsEnvNew(1+i,line) = temp(1);
             end
         end
     end

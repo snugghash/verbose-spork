@@ -1,6 +1,6 @@
 initVariables;
 
-global sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
+global sideWings theta moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -58,6 +58,7 @@ while steps<=max_steps
         end
         counter = counter + 1;
         R(counter) = R(counter-1) + reward;
+%         theta
     end
     avgReward = avgReward/frame;
     % To display all the previous points in the plot.
