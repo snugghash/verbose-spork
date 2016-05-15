@@ -74,7 +74,7 @@ if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
     end
 else
     if(dbg)
-        display('Exploiting')
+        display('Epsilon Greedy Exploiting')
     end
     % Collect good thing - \epsilon-Greedy
     greedyAction = getGreedyAction(obsState, theta);
@@ -88,10 +88,14 @@ else
     end
     if normcdf(randn()) <= 1 - epsilon
         action = greedyAction;
-        display('Exploiting')
+        if(dbg)
+            display('Exploiting')
+        end
     else
         action = remActions( randi(actions-1) );
-        display('Exploring')
+        if(dbg)
+            display('Exploring')
+        end
     end
 end
 
