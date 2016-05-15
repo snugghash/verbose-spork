@@ -145,6 +145,6 @@ if isempty(theta)
     theta = zeros(eyes,numThings);
 end
 global exploreActionsLeft
-if isempty(theta)
+if isempty(exploreActionsLeft)
     exploreActionsLeft = 0;
 end

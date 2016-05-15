@@ -31,7 +31,7 @@ Y = get(avgRewardPlot, 'YData');
 
 % Start the bot
 [EnvState, ~] = EnvironmentModel(0, 1);
-obsEnv = observableEnv(EnvState);
+obsEnv = observableEnv(EnvState, 0);
 action = squareAgent(obsEnv, 0);
 
 steps = 1;

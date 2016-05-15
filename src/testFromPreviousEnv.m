@@ -34,7 +34,7 @@ end
 
 avgReward = 0;
 for i=1:frame
-    obsEnv = observableEnv(EnvState);
+    obsEnv = observableEnv(EnvState, 0);
     action = squareAgent(obsEnv, reward);
     [EnvState, reward] = EnvironmentModel(EnvState, action);
     avgReward = avgReward+reward;

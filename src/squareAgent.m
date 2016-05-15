@@ -79,7 +79,7 @@ else
     % Collect good thing - \epsilon-Greedy
     greedyAction = getGreedyAction(obsState, theta);
     % Random actions thrice.
-    if normcdf(randn()) <= 1 - epsilon && exploreActionsLeft<=0
+    if (normcdf(randn()) <= 1-epsilon) && (exploreActionsLeft<=0)
         action = greedyAction;
         if(dbg)
             display('Exploiting')
@@ -89,7 +89,7 @@ else
         if(dbg)
             display('Exploring epsilon')
         end
-        if exploreActionsLeft==0
+        if exploreActionsLeft<=0
             exploreActionsLeft = 2;
         else
             exploreActionsLeft = exploreActionsLeft-1;
