@@ -38,7 +38,7 @@ while steps<=max_steps
     if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);
         display(['Action taken last step: ' num2str(action)]);
-        display(obsEnv);
+        display(obsEnv(:,:,1));
     end
     avgReward = 0;
     R(counter) = 0;
@@ -49,7 +49,7 @@ while steps<=max_steps
         avgReward = avgReward+reward;
         steps = steps+1;
         if moveSlow && dbg
-            display(obsEnv);
+            display(obsEnv(:,:,1));
             display(reward);
         end
         counter = counter + 1;

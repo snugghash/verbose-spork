@@ -5,7 +5,7 @@ clear all
 amountOfConsumables = 2;
 initVariables;
 global coords
-coords = [60 50 GOOD 2; 10 50 BAD -1];
+coords = [60 50 GOOD 1; 10 50 BAD -2];
 dbg = 1;
 moveSlow = 1;
 main
@@ -21,9 +21,26 @@ main
 %% BAD thing, to the right.
 
 %% GOOD___BAD
+clear all
+amountOfConsumables = 2;
+initVariables;
+global coords
+coords = [60 50 GOOD 1; 70 50 BAD -2];
+dbg = 1;
+moveSlow = 1;
+main
 
 %% BAD___GOOD
 
 %% BAD___GOOD___BAD
 
+%% GOOD___BAD___BAD
+clear all
+amountOfConsumables = 2;
+initVariables;
+global coords
+coords = [60 50 GOOD 1; 70 50 BAD -2; 80 50 BAD -2];
+dbg = 1;
+moveSlow = 1;
+main
 

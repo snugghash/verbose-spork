@@ -108,6 +108,10 @@ if(isempty(previousState)==0)
         for i_counter=1:length(setOfSensors)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));
             theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]);
+            if dbg
+                display('Grad. action value',num2str(gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j])));
+                display('Object type',num2str(j));
+            end
         end
     end
 end

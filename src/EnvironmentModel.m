@@ -8,14 +8,13 @@ reward = 0;
 if prevEnvState == 0
     % 30 rand coordinates, half of them good.
     if isempty(coords)
-    display('Generating coords')
-    coords = randi(gridSize, amountOfConsumables,2);
-    coords(amountOfConsumables/2+1:end,3) = BAD;
-    coords(1:amountOfConsumables/2,3) = GOOD;
-    coords(amountOfConsumables/2+1:end,4) = badReward;
-    coords(1:amountOfConsumables/2,4) = goodReward;
+        coords = randi(gridSize, amountOfConsumables,2);
+        coords(amountOfConsumables/2+1:end,3) = BAD;
+        coords(1:amountOfConsumables/2,3) = GOOD;
+        coords(amountOfConsumables/2+1:end,4) = badReward;
+        coords(1:amountOfConsumables/2,4) = goodReward;
     end
-    display(coords);
+    %display(coords);
     % Good and Bad should have diiferent plot handles, easier for setting
     % new consumables 1-Good and 2-Bad
     positionPlot(1) = plot(axPosition,coords(1:amountOfConsumables/2,1),coords(1:amountOfConsumables/2,2),'g+');
@@ -28,16 +27,16 @@ if prevEnvState == 0
 
     % Current Environment
     currentEnvState = [agentPosition agentDirection;
-        coords;];
+    coords;];
 
     u = visibility * currentEnvState(1,3);
     v = visibility * currentEnvState(1,4);
     quiverPlot = quiver(axPosition, currentEnvState(1,1),currentEnvState(1,2),u,v);
-%     if(sideWings == 1)
-%         for i = 1:eyes
-% %             quiverSidePlot(i) =
-%         end
-%     end
+    %     if(sideWings == 1)
+    %         for i = 1:eyes
+    % %             quiverSidePlot(i) =
+    %         end
+    %     end
 
     return;
 else
@@ -70,8 +69,8 @@ set(positionAgent, 'XData', currentEnvState(1,1), 'YData', currentEnvState(1,2),
 u = visibility * currentEnvState(1,3);
 v = visibility * currentEnvState(1,4);
 set(quiverPlot, 'XData', currentEnvState(1,1),...
-                'YData',currentEnvState(1,2),...
-                'UData', u, 'VData', v);
+'YData',currentEnvState(1,2),...
+'UData', u, 'VData', v);
 if(moveSlow == 1)
     pause(0.1)
 end
