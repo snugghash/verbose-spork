@@ -34,7 +34,7 @@ Y = get(avgRewardPlot, 'YData');
 obsEnv = observableEnv(EnvState);
 action = squareAgent(obsEnv, 0);
 
-steps = 0;
+steps = 1;
 
 if dbg == 1
     display('In main: before while');
@@ -45,7 +45,7 @@ while steps<=max_steps
     if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);
         display(['Action taken last step: ' num2str(action)]);
-        display(obsEnv(:,:,1));
+        %display(obsEnv); %More useful is the closest things, printed in squareAgent.m
     end
     avgReward = 0;
     R(counter) = 0;
@@ -60,7 +60,7 @@ while steps<=max_steps
             break;
         end
         if moveSlow && dbg
-            display(obsEnv(:,:,1));
+            %display(obsEnv); %More useful is the closest things, printed in squareAgent.m
             display(reward);
         end
         counter = counter + 1;

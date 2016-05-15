@@ -44,6 +44,9 @@ for i=1:eyes
     end
 
 end
+if dbg
+    display(obsState);
+end
 % If nothing good found,
 if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
     % Explore (TODO Go to last known good thing)

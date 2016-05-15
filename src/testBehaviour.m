@@ -53,9 +53,9 @@ global coords
 coords = [60 50 GOOD 1; 70 50 BAD -2; 80 50 BAD -2];
 dbg = 1;
 moveSlow = 1;
-max_steps = 25;
+max_steps = 24;
 main
-assert(obsEnv(5,BAD) - 5 <= tolerance);
+assert(min(obsEnv(5,BAD,:)) < 10);
 
 %% GOOD_GOOD_GOOD
 clear all
