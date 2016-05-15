@@ -5,9 +5,7 @@ function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv )
 %   Format of obsEnv: (EYE,DISTANCE) TODO verify
 pos = fullEnv(1,[1 2]);
 dirVec = fullEnv(1,[3 4]);
-global visibility angle eyes WALL GOOD BAD objectRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
-
-actions = 5;
+global visibility actions dbg angle eyes WALL GOOD BAD objectRadius turnRate amountOfConsumables numThings gridSize quiverPlot axPosition quiverSidePlot sideWings GAMMA;
 
 relativePos = [fullEnv(2:end,1)-pos(1) fullEnv(2:end,2)-pos(2) fullEnv(2:end,3) fullEnv(2:end,4)];
 
@@ -30,13 +28,17 @@ for i = 1:eyes
 end
 
 % Things in the field of view within visibility
-relativePosObs = [obsEnvSpace(:,1)-pos(1) obsEnvSpace(:,2)-pos(1)];
+relativePosObs = [obsEnvSpace(:,1)-pos(1) obsEnvSpace(:,2)-pos(2)];
 thetaRotation = atan2d(dirVec(2), dirVec(1));
 rotationMatrix = [cosd(thetaRotation) -sind(thetaRotation); sind(thetaRotation) cosd(thetaRotation)];
 rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix;
 relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
 obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(((eyes+1)/2 - 1)*(angle/eyes))), :); % Minor bug fixed.
-
+if dbg && ~isempty(obsEnvSpace)
+    display(obsEnvSpace);
+elseif dbg
+    display('No food in visibility.');
+end
 
 % New definition for wall detection [foolproof]
 xlimit = [0 gridSize];

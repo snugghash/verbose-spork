@@ -9,6 +9,7 @@ for tmp=1:length(i)
     for j=1:numThings
         %TODO Experimental feature set. Raises to second power the bad things, so it falls away faster.
         if j==BAD
+            % Testing if negative here can make any difference.
             action_value = action_value + 1/state(i(tmp),j)^2*theta(i(tmp),j)/length(i);
         else
             action_value = action_value + 1/state(i(tmp),j)*theta(i(tmp),j)/length(i);

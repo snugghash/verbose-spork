@@ -8,6 +8,13 @@ axReward = subplot(3,3,[7 8 9]);
 hold(axPosition,'on');
 hold(axReward,'on');
 
+% Setting the game boundaries
+xlimit = [0 gridSize];
+ylimit = [0  gridSize];
+xbox = xlimit([1 1 2 2 1]);
+ybox = ylimit([1 2 2 1 1]);
+boundaryPlot = plot(axPosition,xbox,ybox,'BLACK');
+
 % Initializing the plots
 positionPlot(1) = plot(axPosition,0,0); % Good consumable handle
 positionPlot(2) = plot(axPosition,0,0); % Bad consumable handle

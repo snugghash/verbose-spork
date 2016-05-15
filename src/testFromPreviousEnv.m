@@ -2,7 +2,7 @@
 % (learning)
 
 % Testing from previous workspace.
-global dbg wipeOut positionAgent amountOfConsumables sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
+global dbg wipeOut theta positionAgent amountOfConsumables sideWings vec moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten;
 dbg = str2num(input('Do you want to debug = ','s'));
 moveSlow = str2num(input('Do you want the agent to move slowly(Press 1 for yes) = ','s'));
 sideWings = str2num(input('Do you want to sideWings displayed? (Press 1 for yes) ','s'));
@@ -34,7 +34,7 @@ end
 
 avgReward = 0;
 for i=1:frame
-    obsEnv = observableEnv(EnvState, EnvState(1,[1 2]), EnvState(1,[3 4]));
+    obsEnv = observableEnv(EnvState);
     action = squareAgent(obsEnv, reward);
     [EnvState, reward] = EnvironmentModel(EnvState, action);
     avgReward = avgReward+reward;
@@ -42,6 +42,7 @@ for i=1:frame
     if moveSlow && dbg
         display(obsEnv);
         display(reward);
+        display(theta);
     end
 end
 avgReward = avgReward/frame;
