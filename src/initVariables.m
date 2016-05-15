@@ -41,6 +41,11 @@ global frame
 if isempty(frame)
     frame = 100; % We display averages over this frame
 end
+global daydream
+if isempty(daydream)
+    daydream = 0; % DO NOT TOUCH THIS PARAMETER. 
+    % Used to supress outputs while finding the next state for the agent.
+end
 
 %% Environment Model
 if isempty(gridSize)

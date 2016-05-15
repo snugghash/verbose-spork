@@ -1,4 +1,4 @@
-function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv )
+function [ obsEnv, actionSetForDir ] = observableEnv( fullEnv, daydream )
 %UNTITLED2 Summary of this function goes here
 %   Provides the observable environment to the bot based on its curr pos
 %   (pos) and the direction its looking in(dirVec).
@@ -34,9 +34,9 @@ rotationMatrix = [cosd(thetaRotation) -sind(thetaRotation); sind(thetaRotation) 
 rotatedAxesToTheCentreEye_RelativePos = relativePosObs * rotationMatrix;
 relativeAngle= atan2d(rotatedAxesToTheCentreEye_RelativePos(:,2), rotatedAxesToTheCentreEye_RelativePos(:,1));
 obsEnvSpace = obsEnvSpace( (abs(relativeAngle)<(((eyes+1)/2 - 1)*(angle/eyes))), :); % Minor bug fixed.
-if dbg && ~isempty(obsEnvSpace)
+if dbg && ~isempty(obsEnvSpace) && ~daydream
     display(obsEnvSpace);
-elseif dbg
+elseif dbg && ~daydream
     display('No food in visibility.');
 end
 
@@ -95,7 +95,7 @@ end
 actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
 % TODO: Defining the obs environment here
-if(sideWings == 1)
+if(sideWings == 1 && ~daydream)
     for i=1:eyes
         u = visibility * cosd(obsDirs(i));
         v = visibility * sind(obsDirs(i));

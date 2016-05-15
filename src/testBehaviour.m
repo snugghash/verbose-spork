@@ -66,3 +66,11 @@ coords = [60 50 GOOD 1; 70 50 GOOD 1; 80 50 GOOD 1];
 dbg = 1;
 moveSlow = 1;
 main
+
+%% No food at all
+clear all
+amountOfConsumables = 0;
+initVariables;
+dbg = 1;
+moveSlow = 0;
+main

@@ -96,17 +96,30 @@ else
     end
 end
 
+
+
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
-    if any(obsState(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,obsState,action) - discountFactor*actionValueApprox(theta,previousState,previousAction);
+    % New state
+    [newObsState, newReward] = summonNewObsStateForUpdating(action);
+    if any(obsState(:) ~= newObsState(:))
+        % Finding the maxQ(approx) over all actions for the new state.
+        for i_action = 1:actions
+            MaxQnewState = -Inf;
+            qval = actionValueApprox(theta,newObsState,i_action);
+            if MaxQnewState < qval
+                MaxQnewState = qval;
+            end
+        end
+        % Normal Routine
+        delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
-            [tmp j] = min(previousState(setOfSensors(i_counter),:));
-            theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]);
+            [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
+            theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]);
             if dbg
-                display(['Grad. action value: ',num2str(gradActionValue_wrtTheta(previousState,[setOfSensors(i_counter) j]))]);
+                display(['Grad. action value: ',num2str(gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]))]);
                 display(['Object type: ',num2str(j)]);
             end
         end

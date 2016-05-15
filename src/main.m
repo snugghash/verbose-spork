@@ -1,6 +1,6 @@
 initVariables
 
-global sideWings moveSlow gridSize visibility axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten avgRewardPlot;
+global sideWings currEnv moveSlow daydream gridSize visibility axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten avgRewardPlot;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -51,7 +51,8 @@ while steps<=max_steps
     R(counter) = 0;
     for i=1:frame
         [EnvState, reward] = EnvironmentModel(EnvState, action);
-        obsEnv = observableEnv(EnvState);
+        currEnv = EnvState;
+        obsEnv = observableEnv(EnvState, daydream);
         action = squareAgent(obsEnv, reward);
         avgReward = avgReward+reward;
         steps = steps+1;
