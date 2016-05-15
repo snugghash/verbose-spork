@@ -1,6 +1,6 @@
 initVariables
 
-global sideWings moveSlow gridSize axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten avgRewardPlot;
+global sideWings moveSlow gridSize visibility axPosition axReward positionPlot quiverPlot quiverSidePlot eyes blobsEaten avgRewardPlot;
 
 % Setting up axes for the plots and hold 'on'
 axPosition = subplot(3,3,[1 2 3 4 5 6]);
@@ -11,6 +11,8 @@ hold(axReward,'on');
 % Initializing the plots
 positionPlot(1) = plot(axPosition,0,0); % Good consumable handle
 positionPlot(2) = plot(axPosition,0,0); % Bad consumable handle
+axes(axPosition);
+axis([-visibility gridSize+visibility -visibility gridSize+visibility]);
 quiverPlot = quiver(axPosition,50,50,1,0);
 for i = 1:eyes
     quiverSidePlot(i) = quiver(axPosition, 0,0,0,0);
