@@ -17,8 +17,12 @@ if prevEnvState == 0
     %display(coords);
     % Good and Bad should have diiferent plot handles, easier for setting
     % new consumables 1-Good and 2-Bad
-    positionPlot(1) = plot(axPosition,coords(find(coords(:,3)==GOOD),1),coords(find(coords(:,3)==GOOD),2),'g+');
-    positionPlot(2) = plot(axPosition,coords(find(coords(:,3)==BAD),1),coords(find(coords(:,3)==BAD),2),'r+');
+    if(~isempty(find(coords(:,3)==GOOD)))
+        positionPlot(1) = plot(axPosition,coords(find(coords(:,3)==GOOD),1),coords(find(coords(:,3)==GOOD),2),'g+');
+    end
+    if(~isempty(find(coords(:,3)==BAD)))
+        positionPlot(2) = plot(axPosition,coords(find(coords(:,3)==BAD),1),coords(find(coords(:,3)==BAD),2),'r+');
+    end
     agentPosition = initAgentPosition;
     agentDirection = initAgentDirection;
 
@@ -41,9 +45,12 @@ if prevEnvState == 0
     return;
 else
     % Used 'set'. TODO: Test (Ensure hold is on)
-    set(positionPlot(1), 'XData', prevEnvState(find(prevEnvState(2:end,3)==GOOD)+1,1), 'YData', prevEnvState(find(prevEnvState(2:end,3)==GOOD)+1,2),'MarkerEdgeColor', 'g');
-    set(positionPlot(2), 'XData', prevEnvState(find(prevEnvState(2:end,3)==BAD)+1,1), 'YData', prevEnvState(find(prevEnvState(2:end,3)==BAD)+1,2),'MarkerEdgeColor', 'r');
-
+    if(~isempty(find(prevEnvState(2:end,3)==GOOD)))
+        set(positionPlot(1), 'XData', prevEnvState(find(prevEnvState(2:end,3)==GOOD)+1,1), 'YData', prevEnvState(find(prevEnvState(2:end,3)==GOOD)+1,2),'MarkerEdgeColor', 'g');
+    end
+    if(~isempty(find(prevEnvState(2:end,3)==BAD)))
+        set(positionPlot(2), 'XData', prevEnvState(find(prevEnvState(2:end,3)==BAD)+1,1), 'YData', prevEnvState(find(prevEnvState(2:end,3)==BAD)+1,2),'MarkerEdgeColor', 'r');
+    end
 end
 
 % Update the state from last action

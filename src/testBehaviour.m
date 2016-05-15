@@ -56,3 +56,13 @@ moveSlow = 1;
 max_steps = 25;
 main
 assert(obsEnv(5,BAD) - 5 <= tolerance);
+
+%% GOOD_GOOD_GOOD
+clear all
+amountOfConsumables = 3;
+initVariables;
+global coords
+coords = [60 50 GOOD 1; 70 50 GOOD 1; 80 50 GOOD 1];
+dbg = 1;
+moveSlow = 1;
+main
