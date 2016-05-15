@@ -14,11 +14,9 @@ function [ action ] = squareAgent( obsStateBig, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions onlyExplore;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate;
 j=0;
 epsilon = 0.1;
-learningRate = 0.3;
-discountFactor = 0.9;
 
 % Check if theta values are in workspace. Initialize otherwise.
 if(isempty(theta))
@@ -86,7 +84,7 @@ end
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0)
     if any(obsState(:) ~= previousState(:))
-        delta = lastReward + actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + actionValueApprox(theta,obsState,action) - discountFactor*actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp j] = min(previousState(setOfSensors(i_counter),:));
