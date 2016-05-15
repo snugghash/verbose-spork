@@ -144,3 +144,7 @@ global theta
 if isempty(theta)
     theta = zeros(eyes,numThings);
 end
+global exploreActionsLeft
+if isempty(theta)
+    exploreActionsLeft = 0;
+end

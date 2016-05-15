@@ -14,7 +14,7 @@ function [ action ] = squareAgent( obsStateBig, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate disableLearning;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate disableLearning exploreActionsLeft;
 j=0;
 epsilon = 0.1;
 
@@ -48,7 +48,7 @@ if dbg
     display(obsState);
 end
 % If nothing good found,
-if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
+if(blobsEaten<4 || onlyExplore || closestGoodDirection == 0 || turningActions>0 && exploreActionsLeft==0)
     % Explore (TODO Go to last known good thing)
     % Fixed policy: Straight until we hit wall, turn until we no longer face wall, keep
     % going.
@@ -78,7 +78,8 @@ if(closestGoodDirection == 0 || blobsEaten<1 || onlyExplore)
 else
     % Collect good thing - \epsilon-Greedy
     greedyAction = getGreedyAction(obsState, theta);
-    if normcdf(randn()) <= 1 - epsilon
+    % Random actions thrice.
+    if normcdf(randn()) <= 1 - epsilon && exploreActionsLeft<=0
         action = greedyAction;
         if(dbg)
             display('Exploiting')
@@ -88,10 +89,12 @@ else
         if(dbg)
             display('Exploring epsilon')
         end
+        if exploreActionsLeft==0
+            exploreActionsLeft = 2;
+        else
+            exploreActionsLeft = exploreActionsLeft-1;
     end
 end
-
-
 
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
@@ -109,6 +112,8 @@ if(isempty(previousState)==0 && disableLearning==0)
         end
         % Normal Routine
         delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
+        %TODO
+        %delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) + actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
