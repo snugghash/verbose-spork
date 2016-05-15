@@ -127,3 +127,7 @@ global actions
 if isempty(actions)
     actions = 3;
 end
+global sensorOverlap
+if isempty(sensorOverlap)
+    sensorOverlap = 5;
+end
