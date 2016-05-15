@@ -123,3 +123,7 @@ global learningRate
 if isempty(learningRate)
     learningRate = 0.3;
 end
+global actions
+if isempty(actions)
+    actions = 3;
+end

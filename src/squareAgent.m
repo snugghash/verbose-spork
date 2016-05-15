@@ -14,7 +14,7 @@ function [ action ] = squareAgent( obsStateBig, lastReward )
 %%
 % Actions: 1-Move forward, 2-Turn anticlockwise by turnRate\deg,
 % 3-Turn clockwise by turnRate\deg, and 4-Turn 180\deg (NOT IMPLEMENTED)
-global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate;
+global turnRate WALL previousState previousAction theta GOOD BAD eyes numThings actions dbg GAMMA blobsEaten turningActions onlyExplore discountFactor learningRate;
 j=0;
 epsilon = 0.1;
 
@@ -76,8 +76,23 @@ else
     if(dbg)
         display('Exploiting')
     end
-    % Collect good thing
-    action = getGreedyAction(obsState, theta);
+    % Collect good thing - \epsilon-Greedy
+    greedyAction = getGreedyAction(obsState, theta);
+    j=0;
+    remActions = zeros(actions-1,1);
+    for i = 1:actions
+        if i ~= greedyAction
+            j=j+1;
+            remActions(j) = i;
+        end
+    end
+    if normcdf(randn()) <= 1 - epsilon
+        action = greedyAction;
+        display('Exploiting')
+    else
+        action = remActions( randi(actions-1) );
+        display('Exploring')
+    end
 end
 
 %% Updating from observed reward
