@@ -84,7 +84,7 @@ if isempty(goodReward)
 end
 global badReward
 if isempty(badReward)
-    badReward = -2;
+    badReward = -1;
 end
 % Existing pos and vec, generate env.
 global initAgentPosition
@@ -134,7 +134,7 @@ if isempty(actions)
 end
 global sensorOverlap
 if isempty(sensorOverlap)
-    sensorOverlap = 5;
+    sensorOverlap = 3;
 end
 global disableLearning
 if isempty(disableLearning)
