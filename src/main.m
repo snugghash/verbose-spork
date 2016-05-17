@@ -41,20 +41,21 @@ if dbg == 1
 end
 j = 0;
 counter = 1;
+avgR(counter) = 0;
 while steps<=max_steps
     if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);
         display(['Action taken last step: ' num2str(action)]);
         %display(obsEnv); %More useful is the closest things, printed in squareAgent.m
     end
-    avgReward = 0;
+    avgRewardPerFrame = 0;
     R(counter) = 0;
     for i=1:frame
         [EnvState, reward] = EnvironmentModel(EnvState, action);
         currEnv = EnvState;
         obsEnv = observableEnv(EnvState, daydream);
         action = squareAgent(obsEnv, reward);
-        avgReward = avgReward+reward;
+        avgRewardPerFrame = avgRewardPerFrame+reward;
         steps = steps+1;
         if steps>=max_steps
             break;
@@ -65,15 +66,17 @@ while steps<=max_steps
         end
         counter = counter + 1;
         R(counter) = R(counter-1) + reward;
+        avgR(counter) = ((counter-1)*avgR(counter-1) + reward)/counter;
 %         theta
     end
-    avgReward = avgReward/frame;
+    avgRewardPerFrame = avgRewardPerFrame/frame;
     % To display all the previous points in the plot.
     j=j+1;
     temp1(j) = round(steps/frame);
-    temp2(j) = avgReward;
+    temp2(j) = avgRewardPerFrame;
     set(avgRewardPlot, 'XData', [X temp1], 'YData', [Y temp2]);
     set(rewardPlot, 'XData', 1/frame:1/frame:counter/frame, 'YData', R, 'LineStyle', '-', 'Color','g');
     hold on
     drawnow
 end
+% Average

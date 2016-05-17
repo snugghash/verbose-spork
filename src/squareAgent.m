@@ -113,7 +113,7 @@ if(isempty(previousState)==0 && disableLearning==0)
         % Normal Routine
         % delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
         %TODO
-        delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) + actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
