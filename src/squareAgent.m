@@ -92,6 +92,7 @@ else
             exploreActionsLeft = 2;
         else
             exploreActionsLeft = exploreActionsLeft-1;
+        end
     end
 end
 
@@ -100,7 +101,7 @@ end
 if(isempty(previousState)==0 && disableLearning==0)
     % New state
     [newObsState, newReward] = summonNewObsStateForUpdating(action);
-    if any(obsState(:) ~= newObsState(:))
+    if any(obsState(:) ~= previousState(:))
         % Finding the maxQ(approx) over all actions for the new state.
         for i_action = 1:actions
             MaxQnewState = -Inf;
@@ -110,13 +111,14 @@ if(isempty(previousState)==0 && disableLearning==0)
             end
         end
         % Normal Routine
-        delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
+        % delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
         %TODO
-        %delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) + actionValueApprox(theta,previousState,previousAction);
+        delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) + actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
             [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
-            theta(setOfSensors(i_counter),j) = theta(setOfSensors(i_counter),j) + learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]);
+            % TODO: Not sure if I have to include the action component also in gradActionValue_wrtTheta
+            theta(setOfSensors(i_counter),j,action) = theta(setOfSensors(i_counter),j,action) + learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]);
             %if dbg
                 %display(['Update: ',learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j])])
                 %display(['Delta: ', delta]);
@@ -126,7 +128,7 @@ if(isempty(previousState)==0 && disableLearning==0)
         end
     end
 end
-
+theta
 previousState = obsState;
 previousAction = action;
 

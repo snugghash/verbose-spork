@@ -142,7 +142,7 @@ if isempty(disableLearning)
 end
 global theta
 if isempty(theta)
-    theta = zeros(eyes,numThings);
+    theta = zeros(eyes,numThings,actions);
 end
 global exploreActionsLeft
 if isempty(exploreActionsLeft)
