@@ -91,7 +91,8 @@ for line = 1:eyes
     end
 end
 
-% Five actions that can be taken - middle 5
+% Five actions that can be taken - middle 5 
+% [TODO] needs to be modified
 actionSetForDir = obsDirs((eyes+1)/2-(actions-1)/2 : (eyes+1)/2+(actions-1)/2 );
 
 % TODO: Defining the obs environment here

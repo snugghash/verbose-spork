@@ -33,7 +33,8 @@ if dbg == 1
 end
 
 avgReward = 0;
-for i=1:frame
+% for i=1:frame
+while 1
     obsEnv = observableEnv(EnvState, 0);
     action = squareAgent(obsEnv, reward);
     [EnvState, reward] = EnvironmentModel(EnvState, action);

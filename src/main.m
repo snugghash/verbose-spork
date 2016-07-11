@@ -42,6 +42,7 @@ end
 j = 0;
 counter = 1;
 avgR(counter) = 0;
+clear R;
 while steps<=max_steps
     if dbg == 1
         display(['Steps(Age): ' num2str(steps)]);
@@ -67,7 +68,7 @@ while steps<=max_steps
         counter = counter + 1;
         R(counter) = R(counter-1) + reward;
         avgR(counter) = ((counter-1)*avgR(counter-1) + reward)/counter;
-%         theta
+        theta
     end
     avgRewardPerFrame = avgRewardPerFrame/frame;
     % To display all the previous points in the plot.
@@ -79,4 +80,6 @@ while steps<=max_steps
     hold on
     drawnow
 end
-% Average
+% Average Reward Plot
+figure(2);
+plot(1:size(avgR,2), avgR);

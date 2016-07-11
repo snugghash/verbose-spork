@@ -99,13 +99,13 @@ end
 %% Updating from observed reward
 % If previousState exists, update it. % TODO:Check it again, second if cond.
 if(isempty(previousState)==0 && disableLearning==0)
-    % New state
-    [newObsState, newReward] = summonNewObsStateForUpdating(action);
+% %     % New state
+% %     [newObsState, newReward] = summonNewObsStateForUpdating(action);
     if any(obsState(:) ~= previousState(:))
         % Finding the maxQ(approx) over all actions for the new state.
         for i_action = 1:actions
             MaxQnewState = -Inf;
-            qval = actionValueApprox(theta,newObsState,i_action);
+            qval = actionValueApprox(theta,obsState,i_action);
             if MaxQnewState < qval
                 MaxQnewState = qval;
             end
@@ -114,11 +114,13 @@ if(isempty(previousState)==0 && disableLearning==0)
         % delta = newReward - actionValueApprox(theta,obsState,action) + discountFactor*MaxQnewState;
         %TODO
         delta = lastReward + discountFactor*actionValueApprox(theta,obsState,action) - actionValueApprox(theta,previousState,previousAction);
+        % Maximizing over all the possible actions
+        % delta = lastReward + discountFactor*MaxQnewState - actionValueApprox(theta,previousState,previousAction);
         setOfSensors = actionToEye(previousAction);
         for i_counter=1:length(setOfSensors)
-            [tmp, j] = min(newObsState(setOfSensors(i_counter),:));
+            [tmp, j] = min(obsState(setOfSensors(i_counter),:));
             % TODO: Not sure if I have to include the action component also in gradActionValue_wrtTheta
-            theta(setOfSensors(i_counter),j,action) = theta(setOfSensors(i_counter),j,action) + learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j]);
+            theta(setOfSensors(i_counter),j,action) = theta(setOfSensors(i_counter),j,action) - learningRate * delta * gradActionValue_wrtTheta(obsState,[setOfSensors(i_counter) j]);
             %if dbg
                 %display(['Update: ',learningRate * delta * gradActionValue_wrtTheta(newObsState,[setOfSensors(i_counter) j])])
                 %display(['Delta: ', delta]);
@@ -128,7 +130,6 @@ if(isempty(previousState)==0 && disableLearning==0)
         end
     end
 end
-theta
 previousState = obsState;
 previousAction = action;
 

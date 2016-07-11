@@ -1,8 +1,8 @@
-function ans = isValidState (state)
+function ansCheck = isValidState (state)
     global gridSize;
     if state(1,1)<0 || state(1,2)<0 || state(1,1)>gridSize || state(1,2)>gridSize
-        ans = 0;
+        ansCheck = 0;
     else
-        ans = 1;
+        ansCheck = 1;
     end
 end
