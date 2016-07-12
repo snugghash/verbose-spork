@@ -1,6 +1,11 @@
 tic;
 %% Load Image
-rgb = imread('...\verbose-spork\images\Agar.io images\imagebw (20).png');
+path = pwd;
+rootPath = path(1:length(path)-3);
+% TODO make it a global path
+imagepath = fullfile(rootPath, 'images', 'Agar.io images','imagebw (20).png');
+rgb = imread(imagepath);
+rgb = imresize(rgb,0.25);
 figure
 imshow(rgb)
 %% 
@@ -15,7 +20,6 @@ imshow(I)
 % imshow(I)
 %%
 BW = im2bw(I);
-figure(1);
 imshow(BW);
 hold on;
 %%
