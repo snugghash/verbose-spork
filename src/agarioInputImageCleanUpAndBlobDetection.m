@@ -37,3 +37,23 @@ for i=1:s(1)
 end
 
 toc;
+
+%% Screen capture method
+
+ i=1;
+while i<10
+    robo = java.awt.Robot;
+    t = java.awt.Toolkit.getDefaultToolkit();
+    %# Set the capture area as the size for the screen
+    rectangle = java.awt.Rectangle(t.getScreenSize());
+    %# Get the capture
+    image = robo.createScreenCapture(rectangle);
+    %# Save it to file
+    filehandle = java.io.File(sprintf('capture%d.jpg', i));
+    javax.imageio.ImageIO.write(image,'jpg',filehandle);
+    pause(1) %# Wait for 5 min
+    i = i + 1;
+end
+
+
+
